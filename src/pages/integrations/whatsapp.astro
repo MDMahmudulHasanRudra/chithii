@@ -1,0 +1,85 @@
+---
+import Legal from '../../layouts/Legal.astro';
+import { site } from '../../config/site';
+const toc = [
+  { id: 'what', label: 'What the integration does' },
+  { id: 'requirements', label: 'What you need' },
+  { id: 'connect', label: 'How to connect' },
+  { id: 'window', label: 'The 24-hour window' },
+  { id: 'disconnect', label: 'How to disconnect' },
+  { id: 'permissions', label: 'Permissions' },
+  { id: 'data', label: 'How your data is handled' },
+];
+---
+
+<Legal
+  title="WhatsApp integration"
+  description={`How ${site.name} connects a WhatsApp Business number through Meta's Cloud API, what you need, the 24-hour messaging window, permissions and how to disconnect.`}
+  intro={`Connect a WhatsApp Business number through Meta’s official Cloud API. Customer chats arrive in your ${site.name} inbox and your team and AI answer them together.`}
+  eyebrow="Integrations · Messaging channel"
+  badge="Live"
+  toc={toc}
+  dated={false}
+>
+  <h2 id="what">What the integration does</h2>
+  <ul>
+    <li>Shows WhatsApp conversations with your business number in the shared inbox, with status, assignment, notes and full history.</li>
+    <li>Sends the replies that you, your teammates or the AI write, with delivery receipts.</li>
+    <li>Sends approved message templates when you need to reach a customer outside the 24-hour window.</li>
+    <li>Feeds the same routing, SLA, escalation and reporting tools as every other channel.</li>
+  </ul>
+  <p>
+    The Official API needs no phone kept online and no QR code. {site.name} uses only the WhatsApp Business Account and numbers you choose.
+  </p>
+
+  <h2 id="requirements">What you need</h2>
+  <ul>
+    <li>A Meta Business account and a WhatsApp Business Account (you can create one while connecting).</li>
+    <li>A phone number that can receive a verification code and is not already registered on another WhatsApp app.</li>
+    <li>Admin access to that business in Meta Business Suite.</li>
+  </ul>
+
+  <h2 id="connect">How to connect</h2>
+  <ol>
+    <li>Sign in to {site.name} at <a href={site.appUrl}>app.chithii.com</a> and open <strong>Settings → Messaging channels</strong>.</li>
+    <li>Choose <strong>WhatsApp (Official API)</strong>. You are taken to Meta to log in.</li>
+    <li>Pick or create your WhatsApp Business Account, add the number and verify it.</li>
+    <li>Return to {site.name}. New messages to that number start appearing in your inbox.</li>
+  </ol>
+
+  <h2 id="window">The 24-hour window and templates</h2>
+  <p>
+    WhatsApp lets a business reply freely for 24 hours after the customer’s last message. After that, only message templates approved by Meta
+    can be sent. {site.name} shows when a conversation is outside the window and offers your approved templates. Meta may charge for some
+    conversations under its own pricing; those charges are between your business and Meta.
+  </p>
+
+  <h2 id="disconnect">How to disconnect or revoke access</h2>
+  <ul>
+    <li><strong>In {site.name}:</strong> open Settings → Messaging channels and disconnect the number. New messages stop arriving straight away.</li>
+    <li>
+      <strong>In Meta Business Suite:</strong> remove {site.name} from the apps connected to your business or WhatsApp Business Account.
+      This revokes the access you granted, even if you can no longer sign in to {site.name}.
+    </li>
+  </ul>
+  <p>What happens to messages already stored after you disconnect is described on the <a href="/data-deletion">data deletion page</a>.</p>
+
+  <h2 id="permissions">Permissions {site.name} asks for</h2>
+  <table>
+    <caption class="sr-only">Permissions {site.name} requests</caption>
+    <thead>
+      <tr><th scope="col">Permission</th><th scope="col">Why {site.name} needs it</th><th scope="col">What it allows</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>whatsapp_business_management</code></td><td>To find the WhatsApp Business Account and numbers you chose, and their approved templates.</td><td>Reading and managing settings and templates for that account.</td></tr>
+      <tr><td><code>whatsapp_business_messaging</code></td><td>To show messages sent to your number and send the replies you or the AI write.</td><td>Reading and sending WhatsApp messages for that number.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="data">How your data is handled</h2>
+  <p>
+    {site.name} uses messages, phone numbers, profile names and attachments from your connected number only to show conversations to your
+    team, to generate suggested or automatic replies, and to send replies back. The <a href="/privacy">Privacy Policy</a> explains what is
+    stored, who processes it and for how long.
+  </p>
+</Legal>

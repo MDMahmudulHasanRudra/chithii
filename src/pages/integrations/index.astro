@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import { integrationGroups } from '../../data/integrations';
+---
+
+<Base
+  title="Integrations"
+  description="Chithii connects WhatsApp, Messenger, Instagram, Telegram and website chat, your choice of AI provider, Shopify, WooCommerce, bKash, SSLCOMMERZ, Steadfast, Pathao, RedX, Google Sheets, n8n, Zapier and your own systems."
+>
+  <section class="border-b border-line bg-mist">
+    <div class="container-site py-14 sm:py-20">
+      <p class="eyebrow">Integrations</p>
+      <h1 class="mt-3 max-w-3xl text-4xl font-semibold sm:text-5xl">Works with the tools your business already runs on.</h1>
+      <p class="lead mt-5 max-w-2xl">
+        Messaging channels, AI providers, stores, payment gateways, couriers and automation tools, all connected from your project’s settings.
+      </p>
+    </div>
+  </section>
+
+  {
+    integrationGroups.map((g, gi) => (
+      <section id={g.id} class:list={['section scroll-mt-24', gi % 2 === 1 ? 'bg-mist' : 'bg-white']}>
+        <div class="container-site">
+          <div class="max-w-2xl">
+            <h2 class="text-3xl font-semibold">{g.title}</h2>
+            <p class="lead mt-3">{g.intro}</p>
+          </div>
+          <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {g.items.map((i) => {
+              const inner = (
+                <>
+                  <div class="flex items-center gap-3">
+                    <span class:list={['flex size-11 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white', i.color]} aria-hidden="true">
+                      {i.mono}
+                    </span>
+                    <h3 class="text-lg font-semibold">{i.name}</h3>
+                    <span class="ml-auto rounded-full bg-ok-soft px-2.5 py-1 text-xs font-semibold text-ok-ink">Available</span>
+                  </div>
+                  <p class="mt-4 leading-relaxed text-muted">{i.body}</p>
+                  {i.href && (
+                    <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-ink">
+                      Permissions and setup <Icon name="arrow" size={16} />
+                    </span>
+                  )}
+                </>
+              );
+              return (
+                <li id={i.id} class="scroll-mt-24">
+                  {i.href ? (
+                    <a href={i.href} class="card block h-full p-6 text-ink no-underline hover:text-ink hover:shadow-[var(--shadow-float)]">
+                      {inner}
+                    </a>
+                  ) : (
+                    <div class="card h-full p-6">{inner}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="border-t border-line bg-white py-10">
+    <div class="container-site text-sm leading-relaxed text-muted">
+      Product and company names are trademarks of their owners and are used only to describe what Chithii connects to. Chithii is not
+      affiliated with or endorsed by any of them.
+    </div>
+  </section>
+
+  <CTA title="Need a connection that is not listed?" body="The public API and signed webhooks connect Chithii to almost anything. Tell us what you use and we will tell you how." />
+</Base>

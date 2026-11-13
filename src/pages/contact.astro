@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../config/site';
+
+const subject = (s: string) => `?subject=${encodeURIComponent(s)}`;
+const cards = [
+  {
+    i: 'calendar',
+    t: 'Book a demo or ask about pricing',
+    b: 'Tell us your channels, team size and how you handle customer messages today. We will set up a walkthrough with your own use case.',
+    email: site.email.contact,
+    q: subject('Demo request'),
+    cta: 'Request a demo',
+  },
+  {
+    i: 'message',
+    t: 'Help with your account',
+    b: 'Questions about using Chithii, connecting a channel or anything not working as expected.',
+    email: site.email.support,
+    q: '',
+    cta: 'Email support',
+  },
+  {
+    i: 'lock',
+    t: 'Privacy and data requests',
+    b: 'Access, correction, export or deletion of personal data. The data deletion page lists what to include.',
+    email: site.email.privacy,
+    q: '',
+    cta: 'Email privacy',
+  },
+];
+---
+
+<Base title="Contact" description={`Book a demo, get help with your account, or send a privacy request. ${site.name} is run from ${site.location}.`}>
+  <section class="border-b border-line bg-mist">
+    <div class="container-site py-14 sm:py-20">
+      <p class="eyebrow">Contact</p>
+      <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Talk to us</h1>
+      <p class="lead mt-5 max-w-2xl">Email the address that fits your question and a person on our team will reply. For deletion requests, the <a href="/data-deletion">data deletion page</a> lists what to include.</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container-site">
+      <ul class="grid gap-5 lg:grid-cols-3">
+        {
+          cards.map((c) => (
+            <li class="card flex flex-col p-6 sm:p-7">
+              <span class="flex size-11 items-center justify-center rounded-xl bg-accent-soft text-accent-ink"><Icon name={c.i} size={22} /></span>
+              <h2 class="mt-5 text-xl font-semibold">{c.t}</h2>
+              <p class="mt-2 flex-1 leading-relaxed text-muted">{c.b}</p>
+              <a href={`mailto:${c.email}${c.q}`} class="mt-5 text-lg font-semibold break-all">{c.email}</a>
+              <a href={`mailto:${c.email}${c.q}`} class="btn btn-secondary mt-4 self-start">
+                <Icon name="mail" size={18} /> {c.cta}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-12 grid gap-5 lg:grid-cols-2">
+        <div class="card p-6 sm:p-7">
+          <h2 class="flex items-center gap-2 text-xl font-semibold"><Icon name="pin" class="text-accent" /> Who runs {site.name}</h2>
+          <p class="mt-3 leading-relaxed text-muted">
+            {site.name} is run by its founders, {site.founders[0]} and {site.founders[1]}, from {site.location}. <a href="/about">More about us</a>.
+          </p>
+        </div>
+        <div class="card p-6 sm:p-7">
+          <h2 class="flex items-center gap-2 text-xl font-semibold"><Icon name="shield" class="text-accent" /> Report a security issue</h2>
+          <p class="mt-3 leading-relaxed text-muted">
+            Email <a href={`mailto:${site.email.support}${subject('Security')}`}>{site.email.support}</a> with the subject “Security”. See our
+            <a href="/security">security page</a>.
+          </p>
+        </div>
+      </div>
+
+      <p class="mt-10 rounded-xl border border-accent-line bg-accent-soft px-5 py-4 text-[0.97rem]">
+        <strong>Used Get Assist?</strong> Our old @getassist.pro addresses forward here for now, but please use the @chithii.com addresses above
+        from today. Sign in to your workspace at <a href={site.appUrl}>app.chithii.com</a>.
+      </p>
+    </div>
+  </section>
+</Base>

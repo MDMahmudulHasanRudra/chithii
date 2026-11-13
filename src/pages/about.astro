@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CTA from '../components/CTA.astro';
+import { site } from '../config/site';
+
+const principles = [
+  { i: 'users', t: 'People stay in charge', b: 'AI handles the routine and hands over the rest. A person can take over any conversation, at any time, with the full history in view.' },
+  { i: 'lock', t: 'Your data is yours', b: 'We process conversations on your instructions, keep every workspace separate and never sell customer data.' },
+  { i: 'language', t: 'Built for how teams here work', b: 'Bangla and Banglish, WhatsApp groups, bKash and local couriers are first-class, not afterthoughts.' },
+  { i: 'shield', t: 'Honest about limits', b: 'AI can be wrong, so every automatic reply has a confidence check, rate limits and a kill switch.' },
+];
+
+const personSchema = site.founders.map((name) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name,
+  jobTitle: 'Co-founder',
+  worksFor: { '@type': 'Organization', name: site.name, url: site.url },
+  workLocation: { '@type': 'Place', name: site.location },
+}));
+
+const initials = (n: string) =>
+  n
+    .split(' ')
+    .filter((w) => w.length > 2 || w === 'A')
+    .slice(-2)
+    .map((w) => w[0])
+    .join('');
+---
+
+<Base title="About" description={`${site.name} is built in ${site.location} by its founders, ${site.founders.join(' and ')}. Previously known as ${site.formerName}.`} jsonLd={personSchema}>
+  <section class="relative overflow-hidden bg-tide-deep">
+    <div class="pointer-events-none absolute -top-40 -right-40 size-[40rem] rounded-full bg-accent/20 blur-3xl" aria-hidden="true"></div>
+    <div class="container-site relative py-16 sm:py-24">
+      <p class="eyebrow text-accent-bright">About {site.name}</p>
+      <h1 class="mt-4 max-w-3xl text-4xl leading-tight font-semibold text-white sm:text-6xl">
+        Every message is a letter someone is waiting on.
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-tide-muted">
+        <span class="font-bangla font-semibold text-tide-text">চিঠি</span> (chithi) means “letter” in Bangla. We named the product after it because
+        every customer message deserves the care of a reply to a letter, even when a business receives thousands of them a day.
+      </p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container-site grid gap-12 lg:grid-cols-[1.2fr_1fr]">
+      <div class="space-y-5 text-lg leading-relaxed text-muted">
+        <h2 class="text-3xl font-semibold text-ink">Why we built {site.name}</h2>
+        <p>
+          Support teams we worked with were answering customers across WhatsApp groups, Messenger, Instagram and phone calls at once, keeping
+          track in spreadsheets and memory. Messages slipped, nobody could say who had answered whom, and managers found out about problems from
+          angry customers.
+        </p>
+        <p>
+          {site.name} puts every channel in one inbox, gives every customer wait an owner and a deadline, lets AI answer what it truly knows,
+          and turns it all into reports a manager can act on. It grew from a support tool into a platform for running customer operations,
+          from the first message to a paid, delivered order.
+        </p>
+        <p>
+          {site.name} was previously called <strong class="text-ink">{site.formerName}</strong> and lived at {site.formerDomain}. The product,
+          the team and your data are the same; only the name and address changed.
+        </p>
+      </div>
+      <div class="card self-start p-6 sm:p-8">
+        <h2 class="text-xl font-semibold">Company facts</h2>
+        <dl class="mt-5 space-y-4 text-[0.97rem]">
+          <div><dt class="text-sm text-subtle">Product</dt><dd class="font-medium">{site.name} — omnichannel customer support and operations</dd></div>
+          <div><dt class="text-sm text-subtle">Founders</dt><dd class="font-medium">{site.founders.join(' and ')}</dd></div>
+          <div><dt class="text-sm text-subtle">Based in</dt><dd class="font-medium">{site.location}</dd></div>
+          <div><dt class="text-sm text-subtle">Formerly</dt><dd class="font-medium">{site.formerName} ({site.formerDomain})</dd></div>
+          <div><dt class="text-sm text-subtle">Contact</dt><dd class="font-medium"><a href={`mailto:${site.email.contact}`}>{site.email.contact}</a></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-mist">
+    <div class="container-site">
+      <p class="eyebrow">The founders</p>
+      <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Who runs {site.name}</h2>
+      <ul class="mt-10 grid gap-5 sm:grid-cols-2">
+        {
+          site.founders.map((name) => (
+            <li class="card flex items-center gap-5 p-6">
+              <span class="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-tide text-xl font-semibold text-white" aria-hidden="true">
+                {initials(name)}
+              </span>
+              <div>
+                <p class="text-xl font-semibold">{name}</p>
+                <p class="mt-1 text-muted">Co-founder, {site.name} · {site.location}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="container-site">
+      <p class="eyebrow">What we believe</p>
+      <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Four principles behind every feature</h2>
+      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          principles.map((p) => (
+            <li class="card p-6">
+              <span class="flex size-10 items-center justify-center rounded-lg bg-accent-soft text-accent-ink"><Icon name={p.i} /></span>
+              <h3 class="mt-4 font-semibold">{p.t}</h3>
+              <p class="mt-2 leading-relaxed text-muted">{p.b}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CTA />
+</Base>

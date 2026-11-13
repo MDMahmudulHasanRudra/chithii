@@ -1,0 +1,34 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+const n = site.name;
+const toc = [
+  { id: 'website', label: 'This website' },
+  { id: 'app', label: `The ${site.name} app` },
+  { id: 'questions', label: 'Questions' },
+];
+---
+
+<Legal
+  title="Cookies"
+  description={`${n}'s website sets no cookies and uses no analytics. This page also lists the cookies used by the ${n} app.`}
+  intro={`The website at ${site.domain} sets no cookies and uses no analytics or tracking. That is why there is no cookie banner.`}
+  toc={toc}
+>
+  <h2 id="website" class="!mt-0">This website ({site.domain})</h2>
+  <ul>
+    <li>No cookies of any kind.</li>
+    <li>No analytics, advertising or tracking scripts.</li>
+    <li>No fonts, scripts or images loaded from other companies’ servers.</li>
+  </ul>
+
+  <h2 id="app">The {n} app</h2>
+  <p>
+    The app you sign in to, at <a href={site.appUrl}>app.{site.domain}</a>, is a separate service. The app uses only the cookies it needs to sign
+    you in and keep you signed in: a session cookie, a security (CSRF) cookie and a cookie that remembers where to return after signing in. It
+    uses no analytics or advertising cookies.
+  </p>
+
+  <h2 id="questions">Questions</h2>
+  <p>Email <a href={`mailto:${site.email.privacy}`}>{site.email.privacy}</a>.</p>
+</Legal>

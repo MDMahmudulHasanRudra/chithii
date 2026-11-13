@@ -1,0 +1,417 @@
+---
+import Base from '../layouts/Base.astro';
+import InboxMock from '../components/InboxMock.astro';
+import Icon from '../components/Icon.astro';
+import FAQ from '../components/FAQ.astro';
+import CTA from '../components/CTA.astro';
+import { site } from '../config/site';
+import { featureGroups, totalFeatures, totalReports } from '../data/features';
+
+const channels = [
+  { name: 'WhatsApp', color: 'bg-wa', href: '/integrations/whatsapp' },
+  { name: 'Messenger', color: 'bg-fb', href: '/integrations/facebook' },
+  { name: 'Instagram', color: 'bg-ig', href: '/integrations/instagram' },
+  { name: 'Telegram', color: 'bg-tg', href: '/integrations#telegram' },
+  { name: 'Website chat', color: 'bg-accent-bright', href: '/integrations#website-chat' },
+];
+
+const stats = [
+  { value: '5', label: 'messaging channels in one inbox' },
+  { value: '5', label: 'AI providers to choose from' },
+  { value: `${totalReports}`, label: 'ready-made support reports' },
+  { value: `${totalFeatures}+`, label: 'capabilities, all live today' },
+];
+
+const steps = [
+  { title: 'Connect your channels', body: 'Link WhatsApp, your Facebook Pages, Instagram professional accounts, a Telegram bot and your website chat. You choose exactly which accounts.' },
+  { title: 'Teach it your business', body: 'Add answers, policies and products, or import them. Chithii also learns your team’s tone from real conversations.' },
+  { title: 'Decide what AI may do', body: 'Let AI draft for review or reply on its own, set the confidence it needs, and keep rate limits and a kill switch in your hands.' },
+  { title: 'Run support as a team', body: 'Conversations are routed, timed against your SLA and handed to a person with the full history whenever AI should not answer.' },
+];
+
+const faqs = [
+  { q: 'Which channels does Chithii work with?', a: 'WhatsApp (through the official WhatsApp Business Platform), Facebook Messenger, Instagram Direct Messages, Telegram and a chat box for your own website. All of them arrive in one shared inbox.' },
+  { q: 'Does the AI reply without anyone checking?', a: 'Only if you set it up that way. AI can draft replies for your team to approve, or answer on its own when it is confident enough. Below your confidence threshold it hands the conversation to a person and explains why. Rate limits, cooldowns and a kill switch apply to every automatic reply.' },
+  { q: 'Which AI model does Chithii use?', a: 'The one you choose. Each workspace connects its own provider and model: Anthropic Claude, OpenAI, Google Gemini, OpenRouter, or a self-hosted model through Ollama. Your keys are stored encrypted. <a href="/ai-transparency">Read our AI transparency page</a>.' },
+  { q: 'Does it understand Bangla and Banglish?', a: 'Yes. Chithii is built in Dhaka and understands Bangla, English and romanised Bangla (Banglish) such as “bill kivabe generate korbo?” or “call koren”, and can reply in the customer’s language.' },
+  { q: 'What kind of Instagram account do I need?', a: 'An Instagram professional account (business or creator) linked to a Facebook Page you manage. Personal accounts cannot be connected.' },
+  { q: 'Can I take payments and book deliveries from a chat?', a: 'Yes. Send a bKash or SSLCOMMERZ payment link into your own merchant account, create the order, and book Steadfast, Pathao or RedX delivery, all from the conversation. Shopify and WooCommerce stores stay in sync.' },
+  { q: 'I used Get Assist. What changes?', a: `Get Assist is now ${site.name}. Your workspace, conversations and settings carry over unchanged. Sign in at <a href="${site.appUrl}">app.chithii.com</a>, and use the new @chithii.com email addresses to reach us. Links to getassist.pro redirect here automatically.` },
+  { q: 'How much does Chithii cost?', a: `Plans depend on your channels, team size and the modules you use. <a href="/contact">Contact us</a> and we will tell you what applies to your business, confirmed in writing before you pay.` },
+];
+
+const heat = ['opacity-15', 'opacity-30', 'opacity-45', 'opacity-60', 'opacity-80', 'opacity-100'];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a.replace(/<[^>]+>/g, '') },
+  })),
+};
+---
+
+<Base jsonLd={[faqSchema]}>
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-tide-deep text-tide-text">
+    <div class="pointer-events-none absolute -top-40 -right-40 size-[44rem] rounded-full bg-accent/20 blur-3xl" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -bottom-56 -left-32 size-[34rem] rounded-full bg-marigold/10 blur-3xl" aria-hidden="true"></div>
+    <div class="container-site relative pt-16 pb-20 sm:pt-24">
+      <div class="mx-auto max-w-3xl text-center">
+        <p class="inline-flex items-center gap-2 rounded-full border border-tide-line bg-tide-surface/60 px-3.5 py-1.5 text-sm font-medium text-tide-text">
+          <span class="size-1.5 rounded-full bg-accent-bright"></span>
+          Get Assist is now Chithii
+        </p>
+        <h1 class="mt-6 text-[2.6rem] leading-[1.05] font-semibold text-white sm:text-6xl">
+          Every customer conversation, in one place.
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-tide-muted sm:text-xl">
+          WhatsApp, Messenger, Instagram, Telegram and your website chat, answered by your team and AI together, with routing, SLAs,
+          reports and payments built in.
+        </p>
+        <div class="mt-9 flex flex-wrap justify-center gap-3">
+          <a href="/contact" class="btn btn-light">Book a demo</a>
+          <a href="/features" class="btn btn-ghost-dark">Explore every feature <Icon name="arrow" size={18} /></a>
+        </div>
+        <ul class="mt-10 flex flex-wrap justify-center gap-2" aria-label="Supported channels">
+          {
+            channels.map((c) => (
+              <li>
+                <a href={c.href} class="inline-flex items-center gap-2 rounded-full border border-tide-line px-3 py-1.5 text-sm text-tide-text no-underline hover:border-tide-muted hover:text-white">
+                  <span class:list={['size-2 rounded-full', c.color]} />
+                  {c.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="mx-auto mt-14 max-w-5xl">
+        <InboxMock />
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="border-b border-line bg-white">
+    <dl class="container-site grid grid-cols-2 gap-y-8 py-10 lg:grid-cols-4">
+      {
+        stats.map((s) => (
+          <div class="px-2 text-center">
+            <dt class="sr-only">{s.label}</dt>
+            <dd class="text-4xl font-semibold tracking-tight text-tide">{s.value}</dd>
+            <dd class="mt-1 text-sm text-muted">{s.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- Product areas -->
+  <section class="section bg-white">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="eyebrow">The whole platform</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Not just an inbox. Everything a support team runs on.</h2>
+        <p class="lead mt-4">
+          Chithii replaces the patchwork of phones, spreadsheets and chat apps your team juggles today. Every module below is live and can be
+          switched on per project.
+        </p>
+      </div>
+      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          featureGroups.map((g, gi) => (
+            <a
+              href={`/features#${g.id}`}
+              class:list={[
+                'card group flex flex-col p-6 text-ink no-underline transition-shadow hover:text-ink hover:shadow-[var(--shadow-float)]',
+                gi === featureGroups.length - 1 && featureGroups.length % 3 === 1 && 'sm:col-span-2 lg:col-span-3',
+              ]}
+            >
+              <span class="flex size-11 items-center justify-center rounded-xl bg-accent-soft text-accent-ink">
+                <Icon name={g.icon} size={22} />
+              </span>
+              <h3 class="mt-5 text-lg font-semibold">{g.eyebrow}</h3>
+              <p class="mt-2 flex-1 leading-relaxed text-muted">{g.intro.split('. ')[0]}.</p>
+              <ul class="mt-4 space-y-1.5 text-[0.92rem]">
+                {g.features.slice(0, 3).map((f) => (
+                  <li class="flex gap-2">
+                    <Icon name="tick" size={16} class="mt-0.5 shrink-0 text-accent" />
+                    {f.title}
+                  </li>
+                ))}
+              </ul>
+              <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-ink group-hover:text-accent">
+                {g.features.length} features <Icon name="arrow" size={16} />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- AI -->
+  <section class="section bg-mist">
+    <div class="container-site grid items-center gap-12 lg:grid-cols-2">
+      <div>
+        <p class="eyebrow">AI that knows its limits</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Answers the routine. Hands over the rest, with the reason.</h2>
+        <p class="lead mt-4">
+          AI replies only from knowledge you have verified, scores its own confidence, and passes the conversation to the right person when it
+          is not sure. Your team gets an alert that says exactly why.
+        </p>
+        <ul class="mt-8 space-y-5">
+          {
+            [
+              { icon: 'cpu', t: 'Your provider, your model', b: 'Claude, GPT, Gemini, OpenRouter or a self-hosted model. Keys stay encrypted in your workspace.' },
+              { icon: 'wand', t: 'Copilot beside every agent', b: 'Summaries, next steps, suggested replies and rewrites. It never sends on its own.' },
+              { icon: 'brain', t: 'Learns from real conversations', b: 'Finds the questions nobody has a rule for yet and proposes one.' },
+              { icon: 'shield', t: 'Safe sending', b: 'Rate limits, cooldowns and a kill switch on every automatic reply.' },
+            ].map((i) => (
+              <li class="flex gap-4">
+                <span class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white text-accent-ink shadow-[var(--shadow-card)]">
+                  <Icon name={i.icon} />
+                </span>
+                <div>
+                  <p class="font-semibold">{i.t}</p>
+                  <p class="mt-0.5 text-muted">{i.b}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="space-y-4" role="img" aria-label="Example alerts: an AI handover alert with confidence and reason, and a mood alert for an upset customer.">
+        <div class="card p-5">
+          <div class="flex items-center gap-2 text-sm font-semibold text-marigold-ink">
+            <Icon name="sparkles" size={18} /> AI assistance required
+            <span class="ml-auto text-xs font-medium text-subtle">Notification Center</span>
+          </div>
+          <dl class="mt-4 grid grid-cols-[7.5rem_1fr] gap-y-2 text-[0.9rem]">
+            <dt class="text-muted">Group</dt><dd class="font-medium">Hamid Net & Support</dd>
+            <dt class="text-muted">Message</dt><dd class="font-medium">partial payment option khuje pacchi na?</dd>
+            <dt class="text-muted">AI confidence</dt><dd><span class="rounded bg-marigold-soft px-1.5 py-0.5 font-semibold text-marigold-ink">62%</span></dd>
+            <dt class="text-muted">Intent</dt><dd class="font-medium">Billing question</dd>
+            <dt class="text-muted">Reason</dt><dd class="font-medium">No verified knowledge covers this</dd>
+          </dl>
+        </div>
+        <div class="card ml-0 p-5 sm:ml-10">
+          <div class="flex items-center gap-2 text-sm font-semibold text-alert">
+            <Icon name="smile" size={18} /> 😡 Angry customer · High priority
+          </div>
+          <p class="mt-3 text-[0.9rem] text-muted">“barbar eki problem, worst service”</p>
+          <div class="mt-4 flex flex-wrap items-center gap-2 text-xs font-medium">
+            <span class="rounded-full bg-sunken px-2.5 py-1 text-muted">Concerned</span>
+            <Icon name="arrow" size={14} class="text-subtle" />
+            <span class="rounded-full bg-marigold-soft px-2.5 py-1 text-marigold-ink">Frustrated</span>
+            <Icon name="arrow" size={14} class="text-subtle" />
+            <span class="rounded-full bg-alert-soft px-2.5 py-1 text-alert">Angry</span>
+          </div>
+          <p class="mt-4 border-t border-line pt-3 text-[0.82rem] text-muted">AI replies paused, rules continue · Kazi Sifat alerted</p>
+        </div>
+        <div class="card ml-0 flex items-center gap-4 p-5 sm:ml-20">
+          <span class="flex size-10 items-center justify-center rounded-lg bg-alert-soft text-alert"><Icon name="toggle" /></span>
+          <div>
+            <p class="font-semibold">Kill switch</p>
+            <p class="text-sm text-muted">Stop every automatic reply in this project at once.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bangla -->
+  <section class="section bg-white">
+    <div class="container-site grid items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
+      <div class="order-2 grid gap-3 lg:order-1" role="img" aria-label="Examples of Bangla, English and Banglish messages Chithii understands.">
+        {
+          [
+            { m: 'আমার ইন্টারনেট কাজ করছে না', tag: 'Bangla', i: 'Connection issue', bangla: true },
+            { m: 'bill kivabe generate korbo?', tag: 'Banglish', i: 'Billing question' },
+            { m: 'please call koren, urgent', tag: 'Banglish', i: 'Call requested · urgent' },
+            { m: 'Do you deliver to Chattogram?', tag: 'English', i: 'Delivery question' },
+          ].map((x) => (
+            <div class="card flex flex-wrap items-center gap-3 px-5 py-4">
+              <span class:list={['text-[1.02rem] font-medium', x.bangla && 'font-bangla']}>{x.m}</span>
+              <span class="ml-auto rounded bg-sunken px-2 py-0.5 text-xs font-semibold text-muted">{x.tag}</span>
+              <span class="rounded bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent-ink">{x.i}</span>
+            </div>
+          ))
+        }
+      </div>
+      <div class="order-1 lg:order-2">
+        <p class="eyebrow">Built in Dhaka</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Speaks the way your customers actually write.</h2>
+        <p class="lead mt-4">
+          Customers mix Bangla, English and Banglish in the same sentence. Chithii understands all three, picks up call requests and missed
+          calls from plain text, and replies in the customer’s language with your team’s tone.
+        </p>
+        <p class="mt-4 leading-relaxed text-muted">
+          And it fits how business works here: bKash and SSLCOMMERZ payment links, Steadfast, Pathao and RedX deliveries, and reports in
+          Dhaka time.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team ops + reports -->
+  <section class="section bg-mist">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="eyebrow">Support operations</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Nothing slips. And you can prove it.</h2>
+        <p class="lead mt-4">
+          Every customer wait has an owner and a due time. Managers see what is late before customers chase, and reports show exactly who
+          answered, how fast, and what was missed.
+        </p>
+      </div>
+      <div class="mt-12 grid gap-5 lg:grid-cols-3">
+        <div class="card p-6" role="img" aria-label="Support assignment timeline from new message to completed within SLA.">
+          <p class="flex items-center gap-2 font-semibold"><Icon name="timer" size={18} class="text-accent" /> Support assignment</p>
+          <ol class="mt-5 space-y-4 border-l-2 border-line pl-5 text-[0.9rem]">
+            <li class="relative"><span class="absolute top-1.5 -left-[1.6rem] size-2.5 rounded-full bg-accent"></span><p class="font-medium">Customer waiting</p><p class="text-muted">10:02 · Karnaphuli Broadband</p></li>
+            <li class="relative"><span class="absolute top-1.5 -left-[1.6rem] size-2.5 rounded-full bg-accent"></span><p class="font-medium">Assigned to Kazi Sifat</p><p class="text-muted">10:02 · due 10:17 (15 min SLA)</p></li>
+            <li class="relative"><span class="absolute top-1.5 -left-[1.6rem] size-2.5 rounded-full bg-ok"></span><p class="font-medium text-ok-ink">Answered in 6 min</p><p class="text-muted">10:08 · within SLA</p></li>
+          </ol>
+        </div>
+        <div class="card p-6" role="img" aria-label="Response SLA report with bars for each team member.">
+          <p class="flex items-center gap-2 font-semibold"><Icon name="chart" size={18} class="text-accent" /> Human Response SLA · this week</p>
+          <div class="mt-5 space-y-3.5 text-[0.85rem]">
+            {
+              [
+                { n: 'Kazi Sifat', v: 96, w: 'w-[96%]' },
+                { n: 'Nadia Rahman', v: 91, w: 'w-[91%]' },
+                { n: 'Arif Hasan', v: 84, w: 'w-[84%]' },
+                { n: 'Tania Akter', v: 72, w: 'w-[72%]' },
+              ].map((r) => (
+                <div>
+                  <div class="flex justify-between"><span>{r.n}</span><span class="font-semibold">{r.v}%</span></div>
+                  <div class="mt-1.5 h-2 rounded-full bg-sunken"><div class:list={['h-2 rounded-full bg-accent', r.w]} /></div>
+                </div>
+              ))
+            }
+          </div>
+          <p class="mt-5 text-xs text-subtle">Answered by a person within target. AI replies never count.</p>
+        </div>
+        <div class="card p-6" role="img" aria-label="Weekly support heatmap.">
+          <p class="flex items-center gap-2 font-semibold"><Icon name="calendar" size={18} class="text-accent" /> When customers write</p>
+          <div class="mt-5 grid grid-cols-[2rem_repeat(8,1fr)] gap-1 text-[0.65rem] text-subtle">
+            {
+              ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((d, di) => (
+                <>
+                  <span class="self-center">{d}</span>
+                  {[0, 1, 2, 3, 4, 5, 6, 7].map((h) => {
+                    const v = (di * 7 + h * 5 + (h > 2 && h < 6 ? 9 : 0)) % 6;
+                    return <span class:list={['aspect-square rounded-sm bg-accent', heat[v]]} />;
+                  })}
+                </>
+              ))
+            }
+          </div>
+          <div class="mt-2 grid grid-cols-[2rem_repeat(8,1fr)] text-[0.65rem] text-subtle"><span></span><span>9a</span><span></span><span>12p</span><span></span><span>3p</span><span></span><span>6p</span><span></span></div>
+          <p class="mt-4 text-xs text-subtle">Support Activity Heatmap · one of {totalReports} reports</p>
+        </div>
+      </div>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/features#team" class="btn btn-secondary">Team and SLA features</a>
+        <a href="/features#reports" class="btn btn-secondary">See all {totalReports} reports</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commerce -->
+  <section class="section bg-white">
+    <div class="container-site">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Customers and commerce</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">From “is this in stock?” to delivered, in one conversation.</h2>
+      </div>
+      <ol class="mt-12 grid gap-4 md:grid-cols-4">
+        {
+          [
+            { i: 'message', t: 'Customer asks', b: 'A question arrives on any channel and lands on the client’s record.' },
+            { i: 'bag', t: 'Order created', b: 'Pick products and variants from your catalogue, or from Shopify and WooCommerce.' },
+            { i: 'card', t: 'Paid in the chat', b: 'A bKash or SSLCOMMERZ link pays into your own account and settles the invoice.' },
+            { i: 'truck', t: 'Courier booked', b: 'Book Steadfast, Pathao or RedX and track it from the order.' },
+          ].map((s, n) => (
+            <li class="card relative p-6">
+              <span class="text-sm font-semibold text-subtle">Step {n + 1}</span>
+              <span class="mt-3 flex size-11 items-center justify-center rounded-xl bg-marigold-soft text-marigold-ink"><Icon name={s.i} size={22} /></span>
+              <h3 class="mt-4 font-semibold">{s.t}</h3>
+              <p class="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{s.b}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section bg-mist">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="eyebrow">Getting started</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Live in four steps</h2>
+      </div>
+      <ol class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        {
+          steps.map((s, n) => (
+            <li>
+              <span class="flex size-10 items-center justify-center rounded-full bg-tide text-sm font-semibold text-white">{n + 1}</span>
+              <h3 class="mt-4 text-lg font-semibold">{s.title}</h3>
+              <p class="mt-2 leading-relaxed text-muted">{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section class="section bg-white">
+    <div class="container-site grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+      <div>
+        <p class="eyebrow">Your data</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Your conversations stay yours.</h2>
+        <p class="lead mt-4">We process customer messages on behalf of the businesses that use Chithii, and we never sell them.</p>
+      </div>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {
+          [
+            { i: 'lock', t: 'Separated and encrypted', b: 'HTTPS everywhere, AI keys encrypted, and every workspace kept apart from every other.', h: '/security' },
+            { i: 'cpu', t: 'You choose the AI', b: 'Content goes to an AI provider only when you turn AI on, and only to the provider you picked.', h: '/ai-transparency' },
+            { i: 'plug', t: 'Disconnect any time', b: 'Remove a Page or account inside Chithii or in your own Facebook and Instagram settings.', h: '/integrations/facebook' },
+            { i: 'trash', t: 'Deletion on request', b: 'Anyone can ask for their data to be deleted. We act within 30 days of verifying it.', h: '/data-deletion' },
+          ].map((x) => (
+            <li>
+              <a href={x.h} class="card flex h-full gap-4 p-5 text-ink no-underline hover:text-ink hover:shadow-[var(--shadow-float)]">
+                <span class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-ink"><Icon name={x.i} /></span>
+                <span>
+                  <span class="block font-semibold">{x.t}</span>
+                  <span class="mt-1 block text-[0.95rem] text-muted">{x.b}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section bg-mist">
+    <div class="container-site grid gap-10 lg:grid-cols-[1fr_1.6fr]">
+      <div>
+        <p class="eyebrow">Questions</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Frequently asked</h2>
+        <p class="lead mt-4">Anything else? Email <a href={`mailto:${site.email.contact}`}>{site.email.contact}</a>.</p>
+      </div>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <CTA />
+</Base>

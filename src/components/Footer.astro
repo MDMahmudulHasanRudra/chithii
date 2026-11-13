@@ -1,0 +1,51 @@
+---
+import Logo from './Logo.astro';
+import { footerNav, site } from '../config/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="no-print mt-auto bg-tide-night text-tide-muted">
+  <div class="container-site grid gap-12 py-16 lg:grid-cols-[1.3fr_2fr]">
+    <div class="max-w-sm">
+      <Logo tone="light" />
+      <p class="mt-5 leading-relaxed">{site.tagline}</p>
+      <p class="mt-4 text-sm leading-relaxed">
+        Customer conversations, support operations and AI, built in {site.location} for teams that answer customers every day.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href={site.appUrl} class="btn btn-ghost-dark min-h-10 py-2 text-sm">Sign in</a>
+        <a href="/contact" class="btn btn-light min-h-10 py-2 text-sm">Book a demo</a>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
+      {
+        footerNav.map((col) => (
+          <div>
+            <h2 class="text-sm font-semibold tracking-normal text-tide-text">{col.title}</h2>
+            <ul class="mt-4 space-y-2.5 text-[0.95rem]">
+              {col.links.map((l) => (
+                <li>
+                  <a href={l.href} class="text-tide-muted no-underline hover:text-white">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+  <div class="border-t border-tide-line">
+    <div class="container-site space-y-2 py-6 text-[0.85rem] leading-relaxed">
+      <p>
+        © {year} {site.name}. {site.name} is run by its founders, {site.founders[0]} and {site.founders[1]}, from {site.location}.
+        {site.name} was previously called {site.formerName}.
+      </p>
+      <p>
+        WhatsApp, Facebook, Messenger and Instagram are trademarks of Meta Platforms, Inc. Telegram and other names are trademarks of their
+        owners. {site.name} is not affiliated with or endorsed by Meta or any other platform listed on this site.
+      </p>
+    </div>
+  </div>
+</footer>

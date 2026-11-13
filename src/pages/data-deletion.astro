@@ -1,0 +1,69 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+const n = site.name;
+const privacy = site.email.privacy;
+const toc = [
+  { id: 'request', label: 'How to request deletion' },
+  { id: 'verify', label: 'How we verify it' },
+  { id: 'deleted', label: 'What is deleted' },
+  { id: 'kept', label: 'What we may keep' },
+  { id: 'timeframe', label: 'How long it takes' },
+  { id: 'status', label: 'Checking the status' },
+  { id: 'disconnect', label: 'When a channel is disconnected' },
+  { id: 'inactive', label: 'If you stop using Chithii' },
+  { id: 'customers', label: 'If you messaged a business' },
+];
+---
+
+<Legal
+  title="Data deletion instructions"
+  description={`How to ask ${n} to delete your data, what is deleted, how long it takes, and what happens when a messaging channel is disconnected.`}
+  toc={toc}
+>
+  <h2 id="request" class="!mt-0">How to request deletion</h2>
+  <p>Email <a href={`mailto:${privacy}?subject=${encodeURIComponent('Data deletion request')}`}>{privacy}</a> and include:</p>
+  <ul>
+    <li>your name and the email address you use with {n}, if you have an account;</li>
+    <li>the workspace name, if you are a workspace owner;</li>
+    <li>the WhatsApp number, Facebook Page name, Instagram username or Telegram bot concerned, if your request is about a connected channel;</li>
+    <li>if you messaged a business that uses {n}: the name of that business, the channel (WhatsApp, Messenger, Instagram, Telegram or website chat) and the number, name or username you messaged from;</li>
+    <li>what you want deleted: everything, or specific conversations or data.</li>
+  </ul>
+  <p><strong>Do not send passwords or payment details.</strong></p>
+
+  <h2 id="verify">How we verify the request</h2>
+  <p>We delete data only for the person or business it belongs to. Requests to delete a workspace must come from an authorised workspace owner. Before deleting we may ask you to:</p>
+  <ul>
+    <li>reply from the email address linked to the {n} account; or</li>
+    <li>show that you manage the number, Page or account concerned, for example by sending a message from it; or</li>
+    <li>for people who messaged a business, confirm details of the conversation so we can find it.</li>
+  </ul>
+
+  <h2 id="deleted">What is deleted or anonymised</h2>
+  <ul>
+    <li><strong>Workspace requests:</strong> account profiles, team membership, settings, knowledge base content, clients, contacts and orders.</li>
+    <li><strong>Connected channel requests:</strong> access tokens, conversation messages, customer identifiers, attachments and notes for that number, Page, account or bot.</li>
+    <li><strong>Requests from people who messaged a business:</strong> your messages, identifiers and attachments in that business’s inbox, and the client or contact record about you.</li>
+  </ul>
+
+  <h2 id="kept">What we may keep</h2>
+  <p>We may keep limited records where the law requires it, such as invoices and payment records, and a record that a deletion request was made and completed. Data in backups is removed as those backups expire: kept for 30 days, then deleted.</p>
+
+  <h2 id="timeframe">How long it takes</h2>
+  <p>We confirm that we received your request, then delete or anonymise the data within 30 days of verifying it.</p>
+
+  <h2 id="status">Checking the status of your request</h2>
+  <p>We reply by email when the request is complete. You can also ask about the status at any time by replying to that email thread or writing to <a href={`mailto:${privacy}`}>{privacy}</a>.</p>
+
+  <h2 id="disconnect">When a channel is disconnected</h2>
+  <p>Disconnecting and deleting are different. If a business disconnects a channel inside {n}, or removes {n} in its Facebook, Instagram or Meta Business settings, we stop receiving new messages for it straight away.</p>
+  <p><strong>Conversations already stored:</strong> they stay in your workspace until an authorised workspace owner asks us to delete them.</p>
+  <p><strong>When you remove {n} in your Facebook or Meta settings:</strong> this stops {n}’s access straight away, but it does not yet delete stored data automatically. To delete it, send a deletion request as described above.</p>
+
+  <h2 id="inactive">If you stop using {n}</h2>
+  <p>Account data after a customer stops using {n} is kept until an authorised workspace owner asks us to delete it, so the account can be reactivated. You can ask us to delete it earlier at any time using the steps above.</p>
+
+  <h2 id="customers">If you messaged a business that uses {n}</h2>
+  <p>The business you messaged controls your conversation data, and {n} processes it on that business’s behalf. You can ask the business directly, or email <a href={`mailto:${privacy}`}>{privacy}</a> with the details above and we will handle the request with the business.</p>
+</Legal>

@@ -1,0 +1,27 @@
+---
+import { site } from '../config/site';
+interface Props {
+  title?: string;
+  body?: string;
+}
+const {
+  title = 'See Chithii with your own conversations',
+  body = 'Tell us how your team handles customer messages today. We will show you Chithii set up for your channels, your knowledge and your team.',
+} = Astro.props;
+---
+
+<section class="no-print bg-white py-16 sm:py-20">
+  <div class="container-site">
+    <div class="relative overflow-hidden rounded-3xl bg-tide-deep px-6 py-12 text-center sm:px-12 sm:py-16">
+      <div class="pointer-events-none absolute -top-24 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-accent/25 blur-3xl" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-2xl">
+        <h2 class="text-3xl font-semibold text-white sm:text-4xl">{title}</h2>
+        <p class="mt-4 text-lg leading-relaxed text-tide-muted">{body}</p>
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
+          <a href="/contact" class="btn btn-light">Book a demo</a>
+          <a href={site.appUrl} class="btn btn-ghost-dark">Sign in to Chithii</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

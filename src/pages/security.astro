@@ -1,0 +1,67 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+const n = site.name;
+const toc = [
+  { id: 'workspace', label: 'Protecting your workspace' },
+  { id: 'access', label: 'People and permissions' },
+  { id: 'automation', label: 'Safe automation' },
+  { id: 'meta', label: 'Channel access' },
+  { id: 'ai', label: 'AI providers' },
+  { id: 'website', label: 'This website' },
+  { id: 'report', label: 'Reporting a security issue' },
+];
+---
+
+<Legal
+  title="Security"
+  description={`How ${n} protects workspace data, connected messaging channels and this website, and how to report a security issue.`}
+  intro={`This page describes the security measures ${n} has in place today. We do not hold security certifications.`}
+  toc={toc}
+>
+  <h2 id="workspace" class="!mt-0">Protecting your workspace</h2>
+  <ul>
+    <li>All traffic to the app uses HTTPS.</li>
+    <li>AI provider keys and channel access tokens that workspaces add are stored encrypted.</li>
+    <li>Each workspace’s data is kept separate from every other workspace, and each project inside a workspace has its own channels, team and settings.</li>
+    <li>Backups are kept for 30 days, then deleted.</li>
+  </ul>
+
+  <h2 id="access">People and permissions</h2>
+  <ul>
+    <li>Staff access is limited by the role each person is given, with permissions down to individual pages and actions.</li>
+    <li>Every message sent through {n} is recorded with the team member who sent it, the account it was sent from and when.</li>
+    <li>Signing in to the app needs an account created by your workspace administrator.</li>
+  </ul>
+
+  <h2 id="automation">Safe automation</h2>
+  <ul>
+    <li>Rate limits and cooldowns apply to every automatic reply, so a loop or a burst of messages cannot flood a customer.</li>
+    <li>A kill switch stops all automatic replies in a project at once.</li>
+    <li>AI answers only above the confidence your workspace sets, and otherwise hands the conversation to a person.</li>
+    <li>Your team is alerted once when a channel stops being accepted, so a broken connection never goes unnoticed.</li>
+  </ul>
+
+  <h2 id="meta">Channel access</h2>
+  <ul>
+    <li>You connect WhatsApp, a Facebook Page or an Instagram account through Meta’s own login screen. {n} never asks for your Facebook, Instagram or WhatsApp password.</li>
+    <li>You choose which numbers, Pages or accounts to connect, and can disconnect them at any time.</li>
+    <li>Removing {n} in your Facebook, Instagram or Meta Business settings revokes its access, even if you cannot sign in to {n}.</li>
+  </ul>
+
+  <h2 id="ai">AI providers</h2>
+  <p>Each workspace chooses its own AI provider and model. Message content is sent to that provider only when the workspace turns on AI features. See our <a href="/ai-transparency">AI transparency page</a>.</p>
+
+  <h2 id="website">This website ({site.domain})</h2>
+  <ul>
+    <li>No cookies, analytics or third-party scripts.</li>
+    <li>A strict content security policy that only allows files from {site.domain} itself, and blocks the site from being framed by other sites.</li>
+    <li>No forms and no sign-in, so the website itself collects no personal data.</li>
+  </ul>
+
+  <h2 id="report">Reporting a security issue</h2>
+  <p>
+    If you find a security problem in {n}, email <a href={`mailto:${site.email.support}?subject=Security`}>{site.email.support}</a> with the
+    subject “Security”. Please give us a chance to fix it before telling others, and do not access data that is not yours.
+  </p>
+</Legal>

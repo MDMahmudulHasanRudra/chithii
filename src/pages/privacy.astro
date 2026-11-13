@@ -1,0 +1,189 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+const n = site.name;
+const privacy = site.email.privacy;
+const contact = site.email.contact;
+const toc = [
+  { id: 'who-we-are', label: '1. Who we are' },
+  { id: 'scope', label: '2. Scope and our roles' },
+  { id: 'account', label: '3. Account and billing' },
+  { id: 'connected-accounts', label: '4. Connected channels' },
+  { id: 'messages', label: '5. Messages and attachments' },
+  { id: 'commerce', label: '6. Clients, orders and connected tools' },
+  { id: 'ai', label: '7. AI and the knowledge base' },
+  { id: 'purposes', label: '8. Purposes and legal bases' },
+  { id: 'providers', label: '9. Service providers' },
+  { id: 'storage', label: '10. Storage, security, transfers' },
+  { id: 'retention', label: '11. Retention and deletion' },
+  { id: 'disconnecting', label: '12. Disconnecting' },
+  { id: 'rights', label: '13. Your rights' },
+  { id: 'cookies', label: '14. Cookies and analytics' },
+  { id: 'children', label: '15. Children' },
+  { id: 'changes', label: '16. Changes to this policy' },
+];
+---
+
+<Legal
+  title="Privacy Policy"
+  description={`How ${n} collects, uses, shares, stores and deletes personal data, including messages from connected WhatsApp, Messenger, Instagram, Telegram and website chat channels.`}
+  toc={toc}
+>
+  <h2 id="summary" class="!mt-0">Summary in plain language</h2>
+  <ul>
+    <li>Businesses use {n} to manage customer conversations, coordinate their team, use AI-assisted replies and handle orders.</li>
+    <li>For their customers’ messages we act on the business’s instructions. The business decides what is collected and how it is used.</li>
+    <li>If a workspace turns on AI features, relevant message content is sent to the AI provider that workspace chose, so it can suggest or write a reply.</li>
+    <li>We do not sell customer data.</li>
+    <li>You can disconnect a channel at any time and ask us to delete data. See our <a href="/data-deletion">data deletion page</a>.</li>
+    <li>This website sets no cookies and uses no analytics.</li>
+  </ul>
+  <p class="note">
+    {n} was previously called {site.formerName}. This policy replaces the {site.formerName} Privacy Policy published at {site.formerDomain}. The
+    service, the people who run it and the way we handle data have not changed.
+  </p>
+
+  <h2 id="who-we-are">1. Who we are and how to contact us</h2>
+  <p>{n} is run by its founders, {site.founders[0]} and {site.founders[1]}, from {site.location}. In this policy “we” and “us” mean the operator of {n}.</p>
+  <p>For any privacy question or request, email <a href={`mailto:${privacy}`}>{privacy}</a>. For anything else, email <a href={`mailto:${contact}`}>{contact}</a>.</p>
+
+  <h2 id="scope">2. Scope and our roles</h2>
+  <p>This policy covers the website at {site.domain} and the {n} service, including the app at app.{site.domain}.</p>
+  <ul>
+    <li><strong>We decide how data is used (controller)</strong> for visitors to this website and for people who hold a {n} account, such as account owners and their teammates.</li>
+    <li>
+      <strong>We process data on a business’s instructions (processor)</strong> for the conversations, clients and orders that business handles in
+      {n}. When a business connects a WhatsApp number, Facebook Page, Instagram account, Telegram bot or website chat, the messages its customers
+      send are processed for that business. The business is responsible for telling its own customers how their data is used.
+    </li>
+  </ul>
+
+  <h2 id="account">3. Account and billing information</h2>
+  <p>When you create and use a {n} account we process:</p>
+  <ul>
+    <li>your name, email address, username and sign-in credentials;</li>
+    <li>the names, email addresses, roles, shifts and leave of teammates you add;</li>
+    <li>workspace and project settings you choose;</li>
+    <li>
+      billing details needed to charge for the service, where a paid plan applies. <strong>Payment provider:</strong> none at present. Payments
+      are arranged directly with us, for example by invoice or bank transfer, so no payment provider holds your card details.
+    </li>
+    <li>technical logs such as sign-in times and IP addresses, used to keep the service secure.</li>
+  </ul>
+
+  <h2 id="connected-accounts">4. Data from connected channels</h2>
+  <p>When a business connects a messaging channel, we receive:</p>
+  <ul>
+    <li><strong>Facebook Pages and Instagram professional accounts:</strong> the identifiers and names of the Pages or accounts selected, an access token issued by Meta, and basic profile information of the person who connected them, such as their name.</li>
+    <li><strong>WhatsApp:</strong> the WhatsApp Business Account and phone numbers selected, an access token issued by Meta, and the business’s approved message templates.</li>
+    <li><strong>Telegram:</strong> the bot’s name and the bot token the business provides.</li>
+    <li><strong>Website chat:</strong> the website the chat box is installed on and its settings.</li>
+  </ul>
+  <p>
+    The Meta permissions are listed on the <a href="/integrations/whatsapp">WhatsApp</a>, <a href="/integrations/facebook">Messenger</a> and
+    <a href="/integrations/instagram">Instagram</a> integration pages. We use this data only to provide the features the business turned on.
+  </p>
+
+  <h2 id="messages">5. Message content, customer identifiers and attachments</h2>
+  <p>For each conversation on a connected channel we process:</p>
+  <ul>
+    <li>the text of messages sent and received;</li>
+    <li>the identifier the platform assigns to the person messaging the business (for WhatsApp, their phone number), and the name, username or profile picture the platform shares with it;</li>
+    <li>for website chat, the name or email address a visitor chooses to give, and the identifier the chat box uses to keep their conversation together;</li>
+    <li>attachments such as images, voice messages or files sent in the conversation;</li>
+    <li>notes, tags, priorities, assignments, tickets, follow-ups, satisfaction ratings and handover details the business’s team adds or the service records.</li>
+  </ul>
+
+  <h2 id="commerce">6. Clients, orders and connected tools</h2>
+  <p>Where a business uses these features, we process on its instructions:</p>
+  <ul>
+    <li><strong>Clients, contacts and leads:</strong> names, phone numbers, email addresses, social accounts, locations, tags and notes, including records the business imports from a file.</li>
+    <li><strong>Orders and products:</strong> products, prices and stock, and the items, totals, delivery address and payment state of each order.</li>
+    <li>
+      <strong>Payment links:</strong> the amount and the invoice it settles. The customer pays on the page of the payment gateway the business
+      chose (SSLCOMMERZ or bKash) into the business’s own merchant account. We do not receive or store card or wallet details.
+    </li>
+    <li><strong>Courier bookings:</strong> the name, phone number and address needed for delivery, sent to the courier the business chose (Steadfast, Pathao Courier or RedX).</li>
+    <li><strong>Shopify, WooCommerce and Google Sheets:</strong> the products, orders and spreadsheet data the business connects, and who changed monitored spreadsheets.</li>
+  </ul>
+
+  <h2 id="ai">7. AI processing and the knowledge base</h2>
+  <p>
+    Businesses add information to a knowledge base, such as answers, policies and product details. Where a workspace turns on AI features,
+    relevant message content and knowledge base entries are sent to the AI provider and model that the workspace selected or configured, which
+    returns a suggested or automatic reply, a summary, or an analysis such as the detected intent or mood of a message.
+  </p>
+  <p>
+    Each workspace chooses and configures its own AI provider and model. Each provider’s data handling and model-training terms differ, so
+    workspace owners should review the terms of the provider they select. A workspace can also use a self-hosted model so content never leaves
+    its own servers.
+  </p>
+  <p>AI replies can be wrong, and a person on the business’s team can take over a conversation. More detail is on our <a href="/ai-transparency">AI transparency page</a>.</p>
+
+  <h2 id="purposes">8. Purposes and legal bases</h2>
+  <ul>
+    <li>Providing the service to account holders (performance of our contract with you).</li>
+    <li>Processing customer conversations, clients and orders on the business’s instructions (as a processor; the business determines its own legal basis).</li>
+    <li>Security, fraud prevention and keeping the service working (our legitimate interests).</li>
+    <li>Billing and record-keeping (performance of contract and legal obligations).</li>
+    <li>Answering your messages to us (our legitimate interest in responding to you).</li>
+  </ul>
+  <p>We do not sell customer conversation data, and we do not disclose it to unrelated third parties for resale.</p>
+
+  <h2 id="providers">9. Service providers and subprocessors</h2>
+  <p>
+    We process information to deliver the services our customers request. To do that we rely on hosting, communication and other service
+    providers that are necessary to run the platform, and we share personal data with them only as needed for the purposes above. Our current
+    list is on the <a href="/subprocessors">subprocessors page</a>.
+  </p>
+  <p>
+    Some services are independent platforms rather than our subprocessors, and their own terms and privacy policies apply: Meta (WhatsApp,
+    Messenger and Instagram) and Telegram, which carry messages between a business and its customers; the AI provider a workspace chooses; and
+    the payment gateways, couriers, stores and Google services a business connects. We may also disclose data where the law requires it.
+  </p>
+
+  <h2 id="storage">10. Storage location, security and international transfers</h2>
+  <p><strong>Where data is stored:</strong> on a virtual private server provided by Hostinger in Kuala Lumpur, Malaysia. This includes the database, files sent in conversations and backups.</p>
+  <p>
+    <strong>How we protect it:</strong> all traffic to the app uses HTTPS. AI provider keys and channel tokens that workspaces add are stored
+    encrypted. Staff access is limited by the role each person is given, and each workspace’s data is kept separate from every other workspace.
+  </p>
+  <p>
+    <strong>International transfers:</strong> our servers are in Malaysia. When a workspace turns on AI features, relevant content is sent to
+    the AI provider that workspace chose, which may process it in other countries, such as the United States, under that provider’s own terms.
+  </p>
+  <p>More detail is on our <a href="/security">security page</a>.</p>
+
+  <h2 id="retention">11. Retention and deletion</h2>
+  <ul>
+    <li><strong>Conversation messages:</strong> kept while the workspace uses {n}, and after that until an authorised workspace owner asks us to delete them.</li>
+    <li><strong>Account data after a customer stops using {n}:</strong> kept until an authorised workspace owner asks us to delete it, so the account can be reactivated.</li>
+    <li><strong>Logs:</strong> kept for 90 days, then deleted.</li>
+    <li><strong>Backups:</strong> kept for 30 days, then deleted.</li>
+  </ul>
+  <p>An authorised workspace owner can ask for deletion at any time, including before these periods end. The <a href="/data-deletion">data deletion page</a> explains how.</p>
+
+  <h2 id="disconnecting">12. Disconnecting and revoking access</h2>
+  <p>
+    A business can disconnect a channel inside {n}, or remove {n} in its Facebook, Instagram or Meta Business settings. After that we no longer
+    receive new messages for it. Disconnecting is not the same as deleting: what happens to stored data is explained on the
+    <a href="/data-deletion">data deletion page</a>.
+  </p>
+
+  <h2 id="rights">13. Your rights and how to use them</h2>
+  <p>
+    Depending on where you live, you may have the right to access, correct, delete or export your personal data, to object to or restrict some
+    processing, and to withdraw consent. To use these rights, email <a href={`mailto:${privacy}`}>{privacy}</a>.
+  </p>
+  <p>If you messaged a business that uses {n}, that business is responsible for your conversation data. You can contact the business directly, or contact us and we will pass your request to it.</p>
+  <p>You may also complain to the data protection authority where you live, if there is one.</p>
+
+  <h2 id="cookies">14. Cookies and analytics</h2>
+  <p>This website ({site.domain}) sets no cookies, runs no analytics and loads no third-party scripts or fonts. Cookies used by the {n} app are listed on our <a href="/cookies">cookies page</a>.</p>
+
+  <h2 id="children">15. Children</h2>
+  <p>{n} is a service for businesses and professional users and is not directed at children. The person who opens an account must have the legal capacity to enter into a contract on behalf of their business.</p>
+
+  <h2 id="changes">16. Changes to this policy</h2>
+  <p>If we change this policy we will update the “last updated” date above. If the changes are significant we will also tell account holders by email or in the app before they take effect.</p>
+</Legal>

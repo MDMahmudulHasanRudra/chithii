@@ -1,0 +1,78 @@
+---
+// An illustration of the Chithii inbox, drawn in HTML so it stays sharp and needs no images.
+const threads = [
+  { name: 'Hamid Net & Support', ch: 'WhatsApp group', color: 'bg-wa', last: 'partial payment option khuje pacchi na?', time: '2m', active: true, badge: 'AI handed over' },
+  { name: 'Sam Rivera', ch: 'Messenger', color: 'bg-fb', last: 'Do you deliver on weekends?', time: '4m', badge: 'AI answered' },
+  { name: 'nadia.styles', ch: 'Instagram', color: 'bg-ig', last: 'Is the blue one back in stock?', time: '9m' },
+  { name: 'Rafiq Hossain', ch: 'Telegram', color: 'bg-tg', last: 'Thanks, received the invoice 🙏', time: '18m', badge: 'Resolved' },
+  { name: 'Website visitor', ch: 'Website chat', color: 'bg-accent', last: 'Can I pay with bKash?', time: '21m' },
+];
+---
+
+<div class="overflow-hidden rounded-2xl border border-tide-line bg-white text-left text-ink shadow-[var(--shadow-float)]" role="img" aria-label="Illustration of the Chithii inbox: conversations from WhatsApp, Messenger, Instagram, Telegram and website chat in one list, with an AI handover in the open conversation.">
+  <!-- window bar -->
+  <div class="flex items-center gap-2 border-b border-line bg-mist px-4 py-2.5">
+    <span class="size-2.5 rounded-full bg-line-strong"></span><span class="size-2.5 rounded-full bg-line-strong"></span><span class="size-2.5 rounded-full bg-line-strong"></span>
+    <span class="ml-3 text-xs font-medium text-subtle">app.chithii.com / All conversations</span>
+  </div>
+  <div class="grid md:grid-cols-[17rem_1fr]">
+    <!-- list -->
+    <ul class="hidden border-r border-line md:block">
+      {
+        threads.map((t) => (
+          <li class:list={['border-b border-line px-4 py-3', t.active && 'bg-accent-soft']}>
+            <div class="flex items-center gap-2">
+              <span class:list={['size-2 shrink-0 rounded-full', t.color]} />
+              <span class="truncate text-[0.82rem] font-semibold">{t.name}</span>
+              <span class="ml-auto text-[0.7rem] text-subtle">{t.time}</span>
+            </div>
+            <p class="mt-1 truncate pl-4 text-[0.78rem] text-muted">{t.last}</p>
+            <div class="mt-1.5 flex gap-1.5 pl-4">
+              <span class="rounded bg-sunken px-1.5 py-0.5 text-[0.65rem] font-medium text-muted">{t.ch}</span>
+              {t.badge && <span class="rounded bg-marigold-soft px-1.5 py-0.5 text-[0.65rem] font-medium text-marigold-ink">{t.badge}</span>}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+    <!-- thread -->
+    <div class="flex flex-col">
+      <div class="flex items-center gap-3 border-b border-line px-5 py-3">
+        <span class="flex size-8 items-center justify-center rounded-full bg-wa/15 text-xs font-bold text-ok-ink">HN</span>
+        <div class="min-w-0">
+          <p class="truncate text-sm font-semibold">Hamid Net & Support</p>
+          <p class="text-[0.72rem] text-subtle">WhatsApp group · assigned to Kazi Sifat</p>
+        </div>
+        <span class="ml-auto rounded-full border border-marigold-line bg-marigold-soft px-2.5 py-1 text-[0.7rem] font-semibold text-marigold-ink">Open · High</span>
+      </div>
+      <div class="flex-1 space-y-3 bg-mist/60 px-5 py-5 text-[0.85rem]">
+        <div class="max-w-[85%] rounded-2xl rounded-tl-sm bg-white px-3.5 py-2.5 shadow-[var(--shadow-card)]">
+          <p class="text-[0.7rem] font-semibold text-muted">Customer</p>
+          <p class="mt-0.5">amar bill kivabe generate korbo?</p>
+        </div>
+        <div class="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm border border-accent-line bg-accent-soft px-3.5 py-2.5">
+          <p class="flex items-center gap-1.5 text-[0.7rem] font-semibold text-accent-ink">AI reply · 94% confident</p>
+          <p class="mt-0.5 font-bangla">অ্যাপে Billing → Generate Bill চাপুন। বিলটি আপনার ইমেইলেও চলে যাবে।</p>
+          <p class="mt-1 text-[0.68rem] text-accent-ink/80">From your knowledge base · “Billing FAQ”</p>
+        </div>
+        <div class="max-w-[85%] rounded-2xl rounded-tl-sm bg-white px-3.5 py-2.5 shadow-[var(--shadow-card)]">
+          <p class="text-[0.7rem] font-semibold text-muted">Customer</p>
+          <p class="mt-0.5">partial payment option khuje pacchi na?</p>
+        </div>
+        <div class="flex items-center gap-2 text-[0.72rem] font-medium text-marigold-ink">
+          <span class="h-px flex-1 bg-marigold-line"></span>
+          AI 62% sure · no verified knowledge · handed to Kazi Sifat
+          <span class="h-px flex-1 bg-marigold-line"></span>
+        </div>
+        <div class="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-tide px-3.5 py-2.5 text-white">
+          <p class="text-[0.7rem] font-semibold text-tide-muted">Kazi Sifat · support team</p>
+          <p class="mt-0.5">Yes! You can pay part now with the bKash link I'm sending, and the rest before the 10th.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 border-t border-line px-4 py-3">
+        <span class="flex-1 rounded-lg border border-line px-3 py-2 text-[0.8rem] text-subtle">Reply, or type / for Copilot…</span>
+        <span class="rounded-lg bg-tide px-3 py-2 text-[0.75rem] font-semibold text-white">Send</span>
+      </div>
+    </div>
+  </div>
+</div>

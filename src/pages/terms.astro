@@ -1,0 +1,125 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+const n = site.name;
+const support = site.email.support;
+const toc = [
+  { id: 'provider', label: '1. Provider and effective date' },
+  { id: 'service', label: '2. The service and eligibility' },
+  { id: 'accounts', label: '3. Accounts' },
+  { id: 'responsibilities', label: '4. Your responsibilities' },
+  { id: 'acceptable-use', label: '5. Acceptable use' },
+  { id: 'meta', label: '6. Messaging platforms' },
+  { id: 'ai', label: '7. AI-generated responses' },
+  { id: 'commerce', label: '8. Payments to you and deliveries' },
+  { id: 'payment', label: '9. Paying for Chithii' },
+  { id: 'availability', label: '10. Availability' },
+  { id: 'ip', label: '11. Intellectual property' },
+  { id: 'data', label: '12. Confidentiality and your data' },
+  { id: 'termination', label: '13. Suspension and termination' },
+  { id: 'liability', label: '14. Liability and governing law' },
+  { id: 'complaints', label: '15. Complaints and disputes' },
+];
+---
+
+<Legal title="Terms of Service" description={`The terms that apply when a business uses ${n}, including messaging channel connections, AI-generated replies, payment links, payment and termination.`} toc={toc}>
+  <h2 id="summary" class="!mt-0">Summary in plain language</h2>
+  <ul>
+    <li>These terms apply to businesses that use {n}.</li>
+    <li>You are responsible for the channels and accounts you connect, the AI provider you choose, and how you use them with your customers.</li>
+    <li>AI replies can be wrong. You stay responsible for replies sent from your workspace.</li>
+    <li>Your conversation data belongs to you, and you can ask for it to be exported or deleted.</li>
+  </ul>
+  <p class="note">{n} was previously called {site.formerName}. These terms replace the {site.formerName} Terms of Service. Existing customers keep the same agreement, under the new name.</p>
+
+  <h2 id="provider">1. Provider and effective date</h2>
+  <p>{n} is run by its founders, {site.founders[0]} and {site.founders[1]}, from {site.location}. In these terms “we” and “us” mean the operator of {n}. These terms first took effect on {site.legal.effective} and were last updated on {site.legal.updated}.</p>
+
+  <h2 id="service">2. The service and eligibility</h2>
+  <p>
+    {n} helps teams manage customer conversations across messaging channels, coordinate staff, control access, use AI-assisted messaging,
+    handle clients and orders, and review activity in one workspace. Features are listed on the <a href="/features">features page</a>; a feature
+    marked “beta” is usable but may still change.
+  </p>
+  <p>{n} is for businesses and professional users. The person who opens an account must have the legal capacity to enter into a contract on behalf of their business.</p>
+
+  <h2 id="accounts">3. Accounts</h2>
+  <ul>
+    <li>Give accurate information when you create an account and keep it up to date.</li>
+    <li>Keep your sign-in details secret. You are responsible for activity under your account.</li>
+    <li>You may invite teammates and give them roles; you are responsible for what they do in your workspace.</li>
+    <li>Tell us straight away at <a href={`mailto:${support}`}>{support}</a> if you think your account has been accessed without permission.</li>
+  </ul>
+
+  <h2 id="responsibilities">4. Your responsibilities and permissions</h2>
+  <ul>
+    <li>Connect only numbers, Pages, accounts and bots you are authorised to manage.</li>
+    <li>Tell your customers how you handle their messages, including that you use {n} and AI assistance, as your local law and platform rules require.</li>
+    <li>Get the consent your customers must give before you message them, such as WhatsApp opt-in, and respect opt-outs.</li>
+    <li>If you connect your own AI provider, you are responsible for your account with that provider, its costs, and accepting its terms.</li>
+    <li>Make sure the content in your knowledge base is accurate and that you may use it.</li>
+    <li>Comply with the laws that apply to your business and your customer communications.</li>
+  </ul>
+
+  <h2 id="acceptable-use">5. Acceptable use</h2>
+  <p>You must not use {n} to:</p>
+  <ul>
+    <li>send spam, unsolicited marketing or messages outside the rules each messaging platform sets;</li>
+    <li>send unlawful, harmful, deceptive, harassing or discriminatory content;</li>
+    <li>collect sensitive data you are not allowed to collect;</li>
+    <li>try to break, overload, reverse-engineer or get around the security of the service;</li>
+    <li>access another workspace’s data, or resell access to the service without our written agreement.</li>
+  </ul>
+
+  <h2 id="meta">6. Messaging platform terms</h2>
+  <p>
+    The WhatsApp, Messenger, Instagram and Telegram integrations rely on those platforms. When you connect one, you must also follow its terms
+    and policies, including Meta’s rules for business messaging and the WhatsApp Business Messaging Policy. Platforms may change or limit what
+    they allow, which can affect what {n} can do, and some platforms charge businesses directly for certain messages. {n} is not affiliated with
+    or endorsed by Meta, Telegram or any other platform.
+  </p>
+  <p>You can disconnect at any time inside {n} or in the platform’s own settings. See the <a href="/integrations">integration pages</a>.</p>
+
+  <h2 id="ai">7. AI-generated responses and their limits</h2>
+  <ul>
+    <li>AI replies are generated by the AI provider and model your workspace selects, using your knowledge base and the conversation. They can be incomplete, out of date or wrong.</li>
+    <li>You are responsible for replies sent from your workspace, including automatic ones.</li>
+    <li>Do not rely on AI replies for legal, medical, financial or safety-critical advice to your customers.</li>
+    <li>Hand conversations to a person whenever a customer needs one.</li>
+  </ul>
+  <p>See our <a href="/ai-transparency">AI transparency page</a> for how AI features work.</p>
+
+  <h2 id="commerce">8. Payments to you and deliveries</h2>
+  <p>
+    Payment links send your customers to the payment gateway you connected (SSLCOMMERZ or bKash), and the money goes into your own merchant
+    account. You are the seller: prices, refunds, chargebacks and gateway fees are between you, your customer and your gateway. Courier bookings
+    are made with your own courier account and its terms apply. {n} records the result but is not a party to the sale or the delivery.
+  </p>
+
+  <h2 id="payment">9. Paying for Chithii: renewal, cancellation and refunds</h2>
+  <p>Plans, prices, trial terms and refund terms are provided on request at <a href={`mailto:${site.email.contact}`}>{site.email.contact}</a> and are confirmed in writing before you pay. {n} does not take payment through this website.</p>
+
+  <h2 id="availability">10. Availability and maintenance</h2>
+  <p>We work to keep {n} running, but we do not promise it will be available without interruption. We may carry out maintenance, and features that depend on a messaging platform, payment gateway, courier or your AI provider may stop working if those services change, restrict access or are unavailable.</p>
+
+  <h2 id="ip">11. Intellectual property</h2>
+  <p>We own {n}, its software and its brand. You keep ownership of your content. You give us the permission we need to host, process and display your content only to provide the service to you.</p>
+
+  <h2 id="data">12. Confidentiality and customer data ownership</h2>
+  <p>Your conversation data, client records and knowledge base belong to you. We process them on your instructions as described in our <a href="/privacy">Privacy Policy</a>, and we keep them confidential except where the law requires disclosure. We do not sell your data.</p>
+
+  <h2 id="termination">13. Suspension, termination and data export</h2>
+  <ul>
+    <li>You can stop using {n} at any time.</li>
+    <li>We may suspend or close an account that breaks these terms or a platform’s policies, or that puts the service or other users at risk. Where reasonable we will tell you first.</li>
+    <li>You can ask for an export of your data by emailing <a href={`mailto:${support}`}>{support}</a>. What we keep after you stop using the service, and for how long, is explained in our <a href="/privacy">Privacy Policy</a> and on the <a href="/data-deletion">data deletion page</a>.</li>
+  </ul>
+
+  <h2 id="liability">14. Liability and governing law</h2>
+  <p>To the extent the law allows, we are not liable for indirect or consequential losses, for lost profits or data, or for problems caused by messaging platforms, payment gateways, couriers, your AI provider, or AI replies sent from your workspace. Nothing in these terms limits liability that cannot be limited by law.</p>
+  <p>Our total liability for all claims relating to {n} is limited to the fees you paid us for {n} in the 12 months before the claim arose.</p>
+  <p>These terms are governed by the laws of Bangladesh. Disputes are subject to the courts of Bangladesh, without limiting any mandatory consumer rights that apply to you.</p>
+
+  <h2 id="complaints">15. Complaints and disputes</h2>
+  <p>Send complaints in writing to <a href={`mailto:${support}`}>{support}</a>, or to <a href={`mailto:${site.email.privacy}`}>{site.email.privacy}</a> for privacy matters. We will try to resolve any complaint with you first.</p>
+</Legal>

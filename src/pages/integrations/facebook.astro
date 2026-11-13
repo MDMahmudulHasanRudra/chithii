@@ -1,0 +1,79 @@
+---
+import Legal from '../../layouts/Legal.astro';
+import { site } from '../../config/site';
+const toc = [
+  { id: 'what', label: 'What the integration does' },
+  { id: 'connect', label: 'How to connect' },
+  { id: 'disconnect', label: 'How to disconnect' },
+  { id: 'permissions', label: 'Permissions' },
+  { id: 'data', label: 'How your data is handled' },
+];
+---
+
+<Legal
+  title="Facebook Messenger integration"
+  description={`How ${site.name} connects to a Facebook Page to handle Messenger conversations, which permissions it asks for and why, and how to disconnect.`}
+  intro={`Connect a Facebook Page so the messages people send it through Messenger arrive in your ${site.name} inbox, where the AI and your team can answer them.`}
+  eyebrow="Integrations · Messaging channel"
+  badge="Live"
+  toc={toc}
+  dated={false}
+>
+  <h2 id="what">What the integration does</h2>
+  <ul>
+    <li>Shows Messenger conversations sent to the Page you connect in your {site.name} inbox, next to WhatsApp, Instagram, Telegram and website chat.</li>
+    <li>Sends the replies that you, your teammates or the AI write back to the customer through Messenger.</li>
+    <li>Lets the AI answer from your knowledge base and hand a conversation to your team, with routing, SLA timers and reports.</li>
+  </ul>
+  <p>
+    {site.name} only works with the Pages you choose. It does not read your personal Facebook messages or access Pages you did not select.
+    {site.name}’s messaging features never post to your Page. If you use Social Studio to publish posts, nothing is published until a
+    person on your team approves it.
+  </p>
+
+  <h2 id="connect">How to connect</h2>
+  <ol>
+    <li>Sign in to {site.name} at <a href={site.appUrl}>app.chithii.com</a> and open <strong>Settings → Messaging channels</strong> in your project.</li>
+    <li>Choose to connect Facebook Messenger. You are taken to Facebook to log in.</li>
+    <li>Review the permissions Facebook shows and choose the Page or Pages to connect.</li>
+    <li>Return to {site.name}. New messages to that Page start appearing in your inbox.</li>
+  </ol>
+  <p>You need to be able to manage the Page in Facebook to connect it.</p>
+
+  <h2 id="disconnect">How to disconnect or revoke access</h2>
+  <p>You can stop {site.name} from accessing a Page in either of two ways:</p>
+  <ul>
+    <li><strong>In {site.name}:</strong> open Settings → Messaging channels in your project and disconnect the Page. New messages stop arriving straight away.</li>
+    <li>
+      <strong>In Facebook:</strong> open the settings for business integrations or apps connected to your account or Page, find {site.name}
+      and remove it. This revokes the access you granted, even if you can no longer sign in to {site.name}.
+    </li>
+  </ul>
+  <p>
+    If a connection stops being accepted, for example because the person who connected it lost their Page role, {site.name} alerts your
+    team once so someone can reconnect it. What happens to messages already stored after you disconnect is described on the
+    <a href="/data-deletion">data deletion page</a>.
+  </p>
+
+  <h2 id="permissions">Permissions {site.name} asks for</h2>
+  <p>{site.name} uses Facebook Login. Instagram accounts are connected through the Facebook Page they are linked to.</p>
+  <table>
+    <caption class="sr-only">Permissions {site.name} requests</caption>
+    <thead>
+      <tr><th scope="col">Permission</th><th scope="col">Why {site.name} needs it</th><th scope="col">What it allows</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>public_profile</code></td><td>To know which person connected their Facebook account to {site.name}.</td><td>Reading your basic public profile, such as your name.</td></tr>
+      <tr><td><code>pages_show_list</code></td><td>So you can choose which of your Facebook Pages to connect.</td><td>Listing the Pages you manage.</td></tr>
+      <tr><td><code>pages_manage_metadata</code></td><td>So new messages to the Page you chose are delivered to your {site.name} inbox.</td><td>Managing message subscriptions and settings for that Page.</td></tr>
+      <tr><td><code>pages_messaging</code></td><td>To show messages sent to your Page and send the replies you or the AI write.</td><td>Reading and sending Messenger conversations for that Page.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="data">How your data is handled</h2>
+  <p>
+    {site.name} uses the messages, sender names and attachments from your connected Page only to show conversations to your team, to
+    generate suggested or automatic replies, and to send replies back. The <a href="/privacy">Privacy Policy</a> explains what is stored, who
+    processes it and for how long.
+  </p>
+</Legal>

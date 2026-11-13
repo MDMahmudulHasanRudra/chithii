@@ -1,0 +1,41 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+const n = site.name;
+const toc = [
+  { id: 'list', label: 'Current subprocessors' },
+  { id: 'independent', label: 'Independent platforms' },
+  { id: 'changes', label: 'Changes to this list' },
+];
+---
+
+<Legal
+  title="Subprocessors"
+  description={`The service providers that process personal data for ${n}, what they do and where, and the independent platforms ${n} connects to.`}
+  intro={`Subprocessors are service providers that process personal data on our behalf so we can run ${n}. This page lists them. How we use personal data is explained in our Privacy Policy.`}
+  toc={toc}
+>
+  <h2 id="list" class="!mt-0">Current subprocessors</h2>
+  <table>
+    <caption class="sr-only">Subprocessors</caption>
+    <thead><tr><th scope="col">Provider</th><th scope="col">Purpose</th><th scope="col">Location</th></tr></thead>
+    <tbody>
+      <tr><td>Hostinger International Ltd.</td><td>Server hosting for the {n} app, its database, files sent in conversations and backups</td><td>Kuala Lumpur, Malaysia</td></tr>
+      <tr><td>Cloudflare, Inc.</td><td>DNS and hosting for the {site.domain} website</td><td>Global network (United States company)</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="independent">Independent platforms</h2>
+  <p>Some services that handle conversation or order data are not our subprocessors. They are independent platforms that a business chooses to use, and their own terms and privacy policies apply:</p>
+  <ul>
+    <li><strong>Meta</strong> carries WhatsApp, Messenger and Instagram messages between a business and its customers, and publishes the posts a business approves in Social Studio.</li>
+    <li><strong>Telegram</strong> carries messages to and from a business’s Telegram bot.</li>
+    <li><strong>AI providers chosen by a workspace</strong>, such as Anthropic, OpenAI, Google or OpenRouter, or a model the workspace hosts itself. The provider depends on that workspace’s settings.</li>
+    <li><strong>Payment gateways</strong> (SSLCOMMERZ, bKash) that a business connects with its own merchant account.</li>
+    <li><strong>Couriers</strong> (Steadfast, Pathao Courier, RedX) that a business books deliveries with.</li>
+    <li><strong>Stores and productivity tools</strong> a business connects, such as Shopify, WooCommerce, Google Sheets, n8n and Zapier.</li>
+  </ul>
+
+  <h2 id="changes">Changes to this list</h2>
+  <p>We update this page when we add or replace a subprocessor. Questions about this list can be sent to <a href={`mailto:${site.email.privacy}`}>{site.email.privacy}</a>.</p>
+</Legal>

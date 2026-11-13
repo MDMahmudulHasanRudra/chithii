@@ -1,0 +1,11 @@
+# Short links and old paths on chithii.com
+/login            https://app.chithii.com/login   302
+/app              https://app.chithii.com/login   302
+/signin           https://app.chithii.com/login   302
+/whatsapp         /integrations/whatsapp          301
+/messenger        /integrations/facebook          301
+/instagram        /integrations/instagram         301
+/integrations/messenger /integrations/facebook    301
+/privacy-policy   /privacy                        301
+/terms-of-service /terms                          301
+/delete-data      /data-deletion                  301

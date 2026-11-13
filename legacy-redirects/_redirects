@@ -1,0 +1,4 @@
+# Deploy this file to the OLD getassist.pro Cloudflare project (replacing its content)
+# so every old URL permanently points to the same page on chithii.com.
+# Paths are identical on both sites, so one splat rule covers all 12 pages.
+/*  https://chithii.com/:splat  301

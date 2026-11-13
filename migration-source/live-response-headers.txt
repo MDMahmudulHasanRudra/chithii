@@ -1,0 +1,19 @@
+HTTP/1.1 200 OK
+Date: Fri, 13 Nov 2026 16:19:37 GMT
+Content-Type: text/html
+Content-Length: 19296
+Connection: keep-alive
+CF-Cache-Status: HIT
+Cache-Control: no-cache
+ETag: "fc0439c60f17387c8e4e33214320b95b"
+content-security-policy: default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+permissions-policy: camera=(), microphone=(), geolocation=()
+referrer-policy: strict-origin-when-cross-origin
+x-content-type-options: nosniff
+x-frame-options: DENY
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=8v1IZoNL0hh7yRSEi5yQT1fGuTyeE74HjgtuOjIOGitgnKzuh%2F8IEYO6w9yTpWl2arl2qSWL7l99xsWaiSOFeDN5n%2FrFf3T2zcelTFv%2BV45A3hkYwibh2l8lLR%2BKIqnW"}]}
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Server: cloudflare
+CF-RAY: a59f195e5b7871f4-DAC
+alt-svc: h3=":443"; ma=86400
+
