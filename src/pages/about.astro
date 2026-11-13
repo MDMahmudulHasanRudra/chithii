@@ -29,7 +29,7 @@ const initials = (n: string) =>
     .join('');
 ---
 
-<Base title="About" description={`${site.name} is built in ${site.location} by its founders, ${site.founders.join(' and ')}. Previously known as ${site.formerName}.`} jsonLd={personSchema}>
+<Base title="About" description={`${site.name} is built in ${site.location} by its founders, ${site.founders.join(' and ')}.`} jsonLd={personSchema}>
   <section class="relative overflow-hidden bg-tide-deep">
     <div class="pointer-events-none absolute -top-40 -right-40 size-[40rem] rounded-full bg-accent/20 blur-3xl" aria-hidden="true"></div>
     <div class="container-site relative py-16 sm:py-24">
@@ -58,10 +58,6 @@ const initials = (n: string) =>
           and turns it all into reports a manager can act on. It grew from a support tool into a platform for running customer operations,
           from the first message to a paid, delivered order.
         </p>
-        <p>
-          {site.name} was previously called <strong class="text-ink">{site.formerName}</strong> and lived at {site.formerDomain}. The product,
-          the team and your data are the same; only the name and address changed.
-        </p>
       </div>
       <div class="card self-start p-6 sm:p-8">
         <h2 class="text-xl font-semibold">Company facts</h2>
@@ -69,7 +65,6 @@ const initials = (n: string) =>
           <div><dt class="text-sm text-subtle">Product</dt><dd class="font-medium">{site.name} — omnichannel customer support and operations</dd></div>
           <div><dt class="text-sm text-subtle">Founders</dt><dd class="font-medium">{site.founders.join(' and ')}</dd></div>
           <div><dt class="text-sm text-subtle">Based in</dt><dd class="font-medium">{site.location}</dd></div>
-          <div><dt class="text-sm text-subtle">Formerly</dt><dd class="font-medium">{site.formerName} ({site.formerDomain})</dd></div>
           <div><dt class="text-sm text-subtle">Contact</dt><dd class="font-medium"><a href={`mailto:${site.email.contact}`}>{site.email.contact}</a></dd></div>
         </dl>
       </div>
