@@ -21,6 +21,7 @@ export const site = {
 export const nav = [
   { href: '/features', label: 'Features' },
   { href: '/integrations', label: 'Integrations' },
+  { href: '/pricing', label: 'Pricing' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -34,6 +35,7 @@ export const footerNav = [
       { href: '/features#reports', label: 'Reports' },
       { href: '/features#commerce', label: 'Commerce' },
       { href: '/integrations', label: 'Integrations' },
+      { href: '/pricing', label: 'Pricing' },
     ],
   },
   {

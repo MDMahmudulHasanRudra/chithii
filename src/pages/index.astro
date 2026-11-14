@@ -6,6 +6,9 @@ import FAQ from '../components/FAQ.astro';
 import CTA from '../components/CTA.astro';
 import { site } from '../config/site';
 import { featureGroups, totalFeatures, totalReports } from '../data/features';
+import { money, plans, trialDays } from '../data/pricing';
+
+const starter = plans[0];
 
 const channels = [
   { name: 'WhatsApp', color: 'bg-wa', href: '/integrations/whatsapp' },
@@ -37,7 +40,7 @@ const faqs = [
   { q: 'What kind of Instagram account do I need?', a: 'An Instagram professional account (business or creator) linked to a Facebook Page you manage. Personal accounts cannot be connected.' },
   { q: 'Can I take payments and book deliveries from a chat?', a: 'Yes. Send a bKash or SSLCOMMERZ payment link into your own merchant account, create the order, and book Steadfast, Pathao or RedX delivery, all from the conversation. Shopify and WooCommerce stores stay in sync.' },
   { q: 'Where do I sign in?', a: `Sign in to your workspace at <a href="${site.appUrl}">app.chithii.com</a>. It works on desktop and mobile, and can be added to your phone’s home screen.` },
-  { q: 'How much does Chithii cost?', a: `Plans depend on your channels, team size and the modules you use. <a href="/contact">Contact us</a> and we will tell you what applies to your business, confirmed in writing before you pay.` },
+  { q: 'How much does Chithii cost?', a: `Plans start at ${money('bdt', starter.price!.bdt.monthly)} (${money('usd', starter.price!.usd.monthly)}) a month for ${starter.limits.seats.replace(' seats', '')} seats, with all five channels and AI included and no charge per AI reply. Every plan has a ${trialDays}-day free trial. <a href="/pricing">See all plans and prices</a>.` },
 ];
 
 const heat = ['opacity-15', 'opacity-30', 'opacity-45', 'opacity-60', 'opacity-80', 'opacity-100'];
