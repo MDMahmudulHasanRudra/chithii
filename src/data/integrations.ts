@@ -71,7 +71,7 @@ export const integrationGroups: IntegrationGroup[] = [
     intro: 'Each workspace picks its own provider and model, with its own key. Chithii supplies the inbox, routing and controls around it.',
     items: [
       { name: 'Anthropic Claude', body: 'Claude models direct from Anthropic. Also powers the AI Admin Assistant.', mono: 'A', logo: 'claude', color: 'bg-[#c96442]' },
-      { name: 'OpenAI', body: 'GPT models from OpenAI, or any compatible private endpoint.', mono: 'O', color: 'bg-[#10a37f]' },
+      { name: 'OpenAI', body: 'GPT models from OpenAI, or any compatible private endpoint.', mono: 'O', logo: 'openai', color: 'bg-[#10a37f]' },
       { name: 'Google Gemini', body: 'Gemini models direct from Google.', mono: 'G', logo: 'gemini', color: 'bg-[#4285f4]' },
       { name: 'OpenRouter', body: 'One key for many model providers.', mono: 'OR', logo: 'openrouter', color: 'bg-[#6467f2]' },
       { name: 'Ollama and self-hosted', body: 'Run a model on your own server and keep message content in-house.', mono: 'Ol', logo: 'ollama', color: 'bg-[#0f2a2f]' },
@@ -84,11 +84,11 @@ export const integrationGroups: IntegrationGroup[] = [
     items: [
       { name: 'Shopify', body: 'Import products, stock and orders; send approved orders back as drafts.', mono: 'S', logo: 'shopify', color: 'bg-[#5e8e3e]' },
       { name: 'WooCommerce', body: 'Import products, stock and orders; send approved orders to your shop.', mono: 'Wo', logo: 'woocommerce', color: 'bg-[#7f54b3]' },
-      { name: 'bKash', body: 'Payment links straight into your own bKash merchant account.', mono: 'bK', color: 'bg-[#e2136e]' },
-      { name: 'SSLCOMMERZ', body: 'Cards, mobile banking and net banking through your SSLCOMMERZ account.', mono: 'SC', color: 'bg-[#1d4f91]' },
-      { name: 'Steadfast', body: 'Book and track Steadfast deliveries from an order.', mono: 'SF', color: 'bg-[#0d8a4f]' },
-      { name: 'Pathao Courier', body: 'Book and track Pathao deliveries from an order.', mono: 'P', color: 'bg-[#e41f26]' },
-      { name: 'RedX', body: 'Book and track RedX deliveries from an order.', mono: 'RX', color: 'bg-[#d7262d]' },
+      { name: 'bKash', body: 'Payment links straight into your own bKash merchant account.', mono: 'bK', logo: 'bkash', color: 'bg-[#e2136e]' },
+      { name: 'SSLCOMMERZ', body: 'Cards, mobile banking and net banking through your SSLCOMMERZ account.', mono: 'SC', logo: 'sslcommerz', color: 'bg-[#1d4f91]' },
+      { name: 'Steadfast', body: 'Book and track Steadfast deliveries from an order.', mono: 'SF', logo: 'steadfast', color: 'bg-[#0d8a4f]' },
+      { name: 'Pathao Courier', body: 'Book and track Pathao deliveries from an order.', mono: 'P', logo: 'pathao', color: 'bg-[#e41f26]' },
+      { name: 'RedX', body: 'Book and track RedX deliveries from an order.', mono: 'RX', logo: 'redx', color: 'bg-[#d7262d]' },
     ],
   },
   {

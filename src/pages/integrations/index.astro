@@ -35,9 +35,16 @@ import { integrationGroups } from '../../data/integrations';
                   <div class="flex items-center gap-3">
                     {i.logo && brandLogos[i.logo] ? (
                       <span class:list={['flex size-11 shrink-0 items-center justify-center rounded-xl text-white', brandLogos[i.logo].tile]} aria-hidden="true">
-                        <svg viewBox="0 0 24 24" class="size-6" fill="currentColor" role="img" aria-hidden="true">
-                          <path d={brandLogos[i.logo].path} />
-                        </svg>
+                        {brandLogos[i.logo].img ? (
+                          <picture>
+                            <source srcset={`${brandLogos[i.logo].img}.webp`} type="image/webp" />
+                            <img src={`${brandLogos[i.logo].img}.png`} width="32" height="32" alt="" class="size-8" />
+                          </picture>
+                        ) : (
+                          <svg viewBox={brandLogos[i.logo].viewBox ?? '0 0 24 24'} class="size-6" fill="currentColor" aria-hidden="true">
+                            <path d={brandLogos[i.logo].path} />
+                          </svg>
+                        )}
                       </span>
                     ) : (
                       <span class:list={['flex size-11 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white', i.color]} aria-hidden="true">
