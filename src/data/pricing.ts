@@ -72,12 +72,12 @@ export const plans: Plan[] = [
   {
     id: 'starter',
     name: 'Starter',
-    tagline: 'For a solo seller or support person who answers on every social channel.',
+    tagline: 'For a small team that answers customers on every social channel.',
     price: {
       bdt: { monthly: 1850, yearly: 18840, extraSeat: 1100 },
       usd: { monthly: 14.99, yearly: 152.88, extraSeat: 8.99 },
     },
-    limits: { seats: '1 seat', projects: '1 project', whatsapp: 'No WhatsApp number' },
+    limits: { seats: '5 seats', projects: '1 project', whatsapp: 'No WhatsApp number' },
     includesFrom: 'Free',
     highlights: [
       'Instagram and Telegram',
@@ -98,7 +98,7 @@ export const plans: Plan[] = [
       bdt: { monthly: 7350, yearly: 75000, extraSeat: 1700 },
       usd: { monthly: 59.99, yearly: 611.88, extraSeat: 13.99 },
     },
-    limits: { seats: '3 seats', projects: '2 projects', whatsapp: '1 WhatsApp number' },
+    limits: { seats: '8 seats', projects: '2 projects', whatsapp: '1 WhatsApp number' },
     includesFrom: 'Starter',
     highlights: [
       'WhatsApp Official API',
@@ -119,7 +119,7 @@ export const plans: Plan[] = [
       bdt: { monthly: 35750, yearly: 364680, extraSeat: 3050 },
       usd: { monthly: 291.99, yearly: 2978.28, extraSeat: 24.99 },
     },
-    limits: { seats: '10 seats', projects: '5 projects', whatsapp: '3 WhatsApp numbers' },
+    limits: { seats: '15 seats', projects: '5 projects', whatsapp: '3 WhatsApp numbers' },
     includesFrom: 'Growth',
     highlights: [
       'Social Studio: calendar, approvals and publishing',
@@ -147,7 +147,7 @@ export const comparison: RowGroup[] = [
   {
     title: 'Plan limits',
     rows: [
-      { label: 'Team seats included', cells: ['1', '1', '3', '10'] },
+      { label: 'Team seats included', cells: ['1', '5', '8', '15'] },
       { label: 'Extra seats', cells: [false, true, true, true] },
       { label: 'Projects (brands or clients)', cells: ['1', '1 + add-on', '2 + add-on', '5 + add-on'] },
       { label: 'WhatsApp numbers', cells: [false, 'Add-on', '1 + add-on', '3 + add-on'] },
@@ -311,6 +311,79 @@ export const addons: Addon[] = [
   },
 ];
 
+/**
+ * The Custom plan: pick channels and features one by one. The base covers what every plan has
+ * (1 seat, 1 project, website chat, the shared inbox, AI replies with your own key, automation
+ * rules, core reports). Each option is priced per month (or per seat per month) at the add-on
+ * rates above where one exists. `in` lists the standard plans that already include the option, so
+ * the page can say when a standard plan covers the same picks for less.
+ */
+export interface CustomOption {
+  id: string;
+  label: string;
+  price: Record<Currency, number>;
+  perSeat?: boolean;
+  in: string[];
+}
+export interface CustomGroup {
+  title: string;
+  options: CustomOption[];
+}
+
+export const custom = {
+  /** Seats included, like every paid plan. */
+  seats: 5,
+  base: { bdt: 1250, usd: 9.99 } as Record<Currency, number>,
+  extraSeat: { bdt: 1450, usd: 11.99 } as Record<Currency, number>,
+  extraProject: { bdt: 1850, usd: 15 } as Record<Currency, number>,
+  includes: ['5 seats and 1 project', 'Website chat', 'Shared inbox', 'AI replies with your own key', 'Automation rules', 'Core reports'],
+  groups: [
+    {
+      title: 'Channels',
+      options: [
+        { id: 'messenger', label: 'Facebook Messenger', price: { bdt: 500, usd: 4 }, in: ['free', 'starter', 'growth', 'enterprise'] },
+        { id: 'instagram', label: 'Instagram Direct', price: { bdt: 600, usd: 5 }, in: ['starter', 'growth', 'enterprise'] },
+        { id: 'telegram', label: 'Telegram', price: { bdt: 400, usd: 3 }, in: ['starter', 'growth', 'enterprise'] },
+        { id: 'whatsapp', label: 'WhatsApp Official API (1 number)', price: { bdt: 1000, usd: 8 }, in: ['growth', 'enterprise'] },
+      ],
+    },
+    {
+      title: 'AI and automation',
+      options: [
+        { id: 'knowledge', label: 'Knowledge base and menu bots', price: { bdt: 600, usd: 5 }, in: ['starter', 'growth', 'enterprise'] },
+        { id: 'copilot', label: 'AI Copilot, Conversation Learning, mood detection', price: { bdt: 1100, usd: 9 }, perSeat: true, in: ['growth', 'enterprise'] },
+        { id: 'repo', label: 'Product knowledge from your repository', price: { bdt: 1250, usd: 10 }, in: ['enterprise'] },
+      ],
+    },
+    {
+      title: 'Team and support',
+      options: [
+        { id: 'tickets', label: 'Tickets and follow-ups', price: { bdt: 600, usd: 5 }, in: ['starter', 'growth', 'enterprise'] },
+        { id: 'routing', label: 'Automatic routing, SLA and escalations', price: { bdt: 1250, usd: 10 }, in: ['growth', 'enterprise'] },
+        { id: 'shifts', label: 'Shifts, roster, leave, roles and permissions', price: { bdt: 600, usd: 5 }, in: ['growth', 'enterprise'] },
+        { id: 'reports', label: 'All 22 reports with CSAT', price: { bdt: 1000, usd: 8 }, in: ['growth', 'enterprise'] },
+      ],
+    },
+    {
+      title: 'Sales and commerce',
+      options: [
+        { id: 'orders', label: 'Product catalogue, orders and bKash or SSLCOMMERZ payment links', price: { bdt: 1000, usd: 8 }, in: ['starter', 'growth', 'enterprise'] },
+        { id: 'shops', label: 'Shopify and WooCommerce', price: { bdt: 600, usd: 5 }, in: ['starter', 'growth', 'enterprise'] },
+        { id: 'crm', label: 'Clients, contacts, leads and pipeline', price: { bdt: 750, usd: 6 }, in: ['growth', 'enterprise'] },
+        { id: 'courier', label: 'Steadfast, Pathao and RedX courier booking', price: { bdt: 600, usd: 5 }, in: ['growth', 'enterprise'] },
+        { id: 'sheets', label: 'Google Sheets', price: { bdt: 600, usd: 5 }, in: ['growth', 'enterprise'] },
+      ],
+    },
+    {
+      title: 'Platform',
+      options: [
+        { id: 'social', label: 'Social Studio', price: { bdt: 1850, usd: 15 }, in: ['enterprise'] },
+        { id: 'api', label: 'Public API and signed webhooks', price: { bdt: 1250, usd: 10 }, in: ['enterprise'] },
+      ],
+    },
+  ] as CustomGroup[],
+};
+
 export const pricingFaqs = [
   {
     q: 'Is there a free plan?',
@@ -322,7 +395,7 @@ export const pricingFaqs = [
   },
   {
     q: 'What is a seat?',
-    a: 'One team member who signs in and answers customers. On paid plans, seats can be added at any time at the extra-seat price of your plan, and removed at the next renewal.',
+    a: 'One team member who signs in and answers customers. Every paid plan includes at least 5 seats (Starter 5, Growth 8, Enterprise 15), and more can be added at any time at the extra-seat price of your plan, and removed at the next renewal.',
   },
   {
     q: 'How much do I save by paying yearly?',
@@ -353,7 +426,11 @@ export const pricingFaqs = [
     a: 'No. Unlike tools that sell AI conversation packs, Chithii does not count or cap AI replies. You pay your own AI provider for what you use.',
   },
   {
-    q: 'I need more than 10 seats or 5 projects.',
+    q: 'How does the Custom plan work?',
+    a: 'Tick only the channels and features you need, set your seats and projects, and the price updates as you go. If a standard plan already covers everything you picked for less, the page says so, and you can choose either.',
+  },
+  {
+    q: 'I need more than 15 seats or 5 projects.',
     a: 'Add seats to Enterprise at the extra-seat price, or <a href="/contact">talk to us</a> about a plan sized to your team.',
   },
 ];
