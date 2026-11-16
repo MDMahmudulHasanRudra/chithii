@@ -7,15 +7,16 @@ import CTA from '../components/CTA.astro';
 import { site } from '../config/site';
 import { featureGroups, totalFeatures, totalReports } from '../data/features';
 import { isFree, money, plans, trialDays } from '../data/pricing';
+import { brandLogos } from '../data/brandLogos';
 
 const starter = plans.find((p) => p.price && !isFree(p))!;
 
 const channels = [
-  { name: 'WhatsApp', color: 'bg-wa', href: '/integrations/whatsapp' },
-  { name: 'Messenger', color: 'bg-fb', href: '/integrations/facebook' },
-  { name: 'Instagram', color: 'bg-ig', href: '/integrations/instagram' },
-  { name: 'Telegram', color: 'bg-tg', href: '/integrations#telegram' },
-  { name: 'Website chat', color: 'bg-accent-bright', href: '/integrations#website-chat' },
+  { name: 'WhatsApp', color: 'bg-wa', logo: 'whatsapp', href: '/integrations/whatsapp' },
+  { name: 'Messenger', color: 'bg-fb', logo: 'messenger', href: '/integrations/facebook' },
+  { name: 'Instagram', color: 'bg-ig', logo: 'instagram', href: '/integrations/instagram' },
+  { name: 'Telegram', color: 'bg-tg', logo: 'telegram', href: '/integrations#telegram' },
+  { name: 'Website chat', color: 'bg-accent-bright', logo: undefined, href: '/integrations#website-chat' },
 ];
 
 const stats = [
@@ -83,7 +84,13 @@ const faqSchema = {
             channels.map((c) => (
               <li>
                 <a href={c.href} class="inline-flex items-center gap-2 rounded-full border border-tide-line px-3 py-1.5 text-sm text-tide-text no-underline hover:border-tide-muted hover:text-white">
-                  <span class:list={['size-2 rounded-full', c.color]} />
+                  {c.logo ? (
+                    <span class:list={['flex size-5 items-center justify-center rounded-md text-white', brandLogos[c.logo].tile]} aria-hidden="true">
+                      <svg viewBox="0 0 24 24" class="size-3.5" fill="currentColor" aria-hidden="true"><path d={brandLogos[c.logo].path} /></svg>
+                    </span>
+                  ) : (
+                    <span class:list={['size-2 rounded-full', c.color]} />
+                  )}
                   {c.name}
                 </a>
               </li>
