@@ -149,8 +149,8 @@ export const comparison: RowGroup[] = [
     rows: [
       { label: 'Team seats included', cells: ['1', '1', '3', '10'] },
       { label: 'Extra seats', cells: [false, true, true, true] },
-      { label: 'Projects (brands or clients)', cells: ['1', '1', '2', '5'] },
-      { label: 'WhatsApp numbers', cells: [false, false, '1', '3'] },
+      { label: 'Projects (brands or clients)', cells: ['1', '1 + add-on', '2 + add-on', '5 + add-on'] },
+      { label: 'WhatsApp numbers', cells: [false, 'Add-on', '1 + add-on', '3 + add-on'] },
       { label: 'Conversations and contacts', cells: ['Unlimited', 'Unlimited', 'Unlimited', 'Unlimited'] },
       { label: 'AI replies', cells: ['Unlimited', 'Unlimited', 'Unlimited', 'Unlimited'] },
     ],
@@ -160,7 +160,7 @@ export const comparison: RowGroup[] = [
     rows: [
       { label: 'Website chat and Facebook Messenger', cells: [true, true, true, true] },
       { label: 'Instagram and Telegram', cells: [false, true, true, true] },
-      { label: 'WhatsApp Official API', cells: [false, false, true, true] },
+      { label: 'WhatsApp Official API', cells: [false, 'Add-on', true, true] },
       { label: 'Shared inbox, notes, tags, priority, status and snooze', cells: [true, true, true, true] },
       { label: 'Desktop and mobile, with push notifications', cells: [true, true, true, true] },
     ],
@@ -172,7 +172,7 @@ export const comparison: RowGroup[] = [
       { label: 'Bring your own AI provider (Claude, OpenAI, Gemini, OpenRouter, Ollama)', cells: [true, true, true, true] },
       { label: 'Automation rules', cells: [true, true, true, true] },
       { label: 'Knowledge base, communication style and menu bots', cells: [false, true, true, true] },
-      { label: 'AI Copilot for agents', cells: [false, false, true, true] },
+      { label: 'AI Copilot for agents', cells: [false, 'Add-on', true, true] },
       { label: 'Conversation Learning and AI sandbox', cells: [false, false, true, true] },
       { label: 'Mood detection', cells: [false, false, true, true] },
       { label: 'Product knowledge from your repository', cells: [false, false, false, true] },
@@ -203,16 +203,16 @@ export const comparison: RowGroup[] = [
       { label: 'bKash and SSLCOMMERZ payment links', cells: [false, true, true, true] },
       { label: 'Shopify and WooCommerce', cells: [false, true, true, true] },
       { label: 'Clients, contacts, leads and pipeline', cells: [false, false, true, true] },
-      { label: 'Steadfast, Pathao and RedX courier booking', cells: [false, false, true, true] },
-      { label: 'Google Sheets', cells: [false, false, true, true] },
+      { label: 'Steadfast, Pathao and RedX courier booking', cells: [false, 'Add-on', true, true] },
+      { label: 'Google Sheets', cells: [false, 'Add-on', true, true] },
     ],
   },
   {
     title: 'Platform',
     rows: [
       { label: 'Every reply recorded: who sent what, when', cells: [true, true, true, true] },
-      { label: 'Social Studio', cells: [false, false, false, true] },
-      { label: 'Public API and signed webhooks', cells: [false, false, false, true] },
+      { label: 'Social Studio', cells: [false, false, 'Add-on', true] },
+      { label: 'Public API and signed webhooks', cells: [false, false, 'Add-on', true] },
     ],
   },
   {
@@ -221,6 +221,93 @@ export const comparison: RowGroup[] = [
       { label: 'Support', cells: ['Email', 'Email', 'Email and chat', 'Priority, named contact'] },
       { label: 'Setup of channels and knowledge', cells: ['Guides', 'Guides', 'Guided call', 'Done for you'] },
     ],
+  },
+];
+
+export interface Addon {
+  name: string;
+  icon: string;
+  /** null = included or by arrangement; see `note`. */
+  price: Record<Currency, number> | null;
+  per: string;
+  note?: string;
+  body: string;
+}
+
+/** Add-ons for paid plans. Each one is a seat, number, project or module the app's billing can switch on. */
+export const addons: Addon[] = [
+  {
+    name: 'AI replies',
+    icon: 'sparkles',
+    price: null,
+    per: '',
+    note: 'Included, unlimited',
+    body: 'No AI conversation packs to buy. AI answers as many customers as you have, through your own AI provider.',
+  },
+  {
+    name: 'Extra seats',
+    icon: 'users',
+    price: { bdt: 1100, usd: 8.99 },
+    per: '/ seat / mo',
+    note: 'from',
+    body: 'Add team members to any paid plan at that plan’s seat price, and remove them at renewal.',
+  },
+  {
+    name: 'WhatsApp number',
+    icon: 'whatsapp',
+    price: { bdt: 1000, usd: 8 },
+    per: '/ number / mo',
+    body: 'Add the WhatsApp Official API to Starter, or connect another WhatsApp number on Growth or Enterprise.',
+  },
+  {
+    name: 'AI Copilot',
+    icon: 'wand',
+    price: { bdt: 1100, usd: 9 },
+    per: '/ seat / mo',
+    body: 'Summaries, suggested replies and rewrites inside every conversation, for Starter. Included in Growth and above.',
+  },
+  {
+    name: 'Extra project',
+    icon: 'layers',
+    price: { bdt: 1850, usd: 15 },
+    per: '/ project / mo',
+    body: 'Another brand or client with its own channels, team, knowledge and settings, on any paid plan.',
+  },
+  {
+    name: 'Social Studio',
+    icon: 'calendar',
+    price: { bdt: 1850, usd: 15 },
+    per: '/ mo',
+    body: 'Plan, approve and publish posts to Facebook and Instagram from a shared calendar, for Growth.',
+  },
+  {
+    name: 'API and webhooks',
+    icon: 'plug',
+    price: { bdt: 1250, usd: 10 },
+    per: '/ mo',
+    body: 'Scoped API keys and signed webhooks to your own systems, n8n or Zapier, for Growth.',
+  },
+  {
+    name: 'Courier booking',
+    icon: 'truck',
+    price: { bdt: 600, usd: 5 },
+    per: '/ mo',
+    body: 'Book and track Steadfast, Pathao and RedX deliveries from the chat, for Starter.',
+  },
+  {
+    name: 'Google Sheets',
+    icon: 'sheet',
+    price: { bdt: 600, usd: 5 },
+    per: '/ mo',
+    body: 'Sync customers, orders and support work with Google Sheets your team already uses, for Starter.',
+  },
+  {
+    name: 'Setup done for you',
+    icon: 'badge',
+    price: null,
+    per: '',
+    note: 'Talk to us',
+    body: 'We connect your channels, write your knowledge base and set up rules and routing with your team.',
   },
 ];
 
@@ -256,6 +343,14 @@ export const pricingFaqs = [
   {
     q: 'Can I change plans later?',
     a: 'Yes. Upgrade at any time and the new modules switch on straight away. Moving to a smaller plan takes effect at your next renewal. Switching a module off never deletes its data.',
+  },
+  {
+    q: 'What add-ons are there?',
+    a: 'Extra seats, WhatsApp numbers and projects, and modules from a higher plan: AI Copilot, Social Studio, API and webhooks, courier booking and Google Sheets. Add-ons are billed with your plan and can be removed at renewal.',
+  },
+  {
+    q: 'Do I need to buy AI conversations?',
+    a: 'No. Unlike tools that sell AI conversation packs, Chithii does not count or cap AI replies. You pay your own AI provider for what you use.',
   },
   {
     q: 'I need more than 10 seats or 5 projects.',

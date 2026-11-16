@@ -2,22 +2,37 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import FAQ from '../components/FAQ.astro';
-import CTA from '../components/CTA.astro';
 import { site } from '../config/site';
-import { comparison, isFree, money, perMonthYearly, plans, pricingFaqs, trialDays, yearlyDiscount, type Currency } from '../data/pricing';
+import {
+  addons,
+  comparison,
+  isFree,
+  money,
+  perMonthYearly,
+  plans,
+  pricingFaqs,
+  trialDays,
+  yearlyDiscount,
+  type Currency,
+} from '../data/pricing';
 
 const firstPaid = plans.find((p) => p.price && !isFree(p))!;
-
 const mail = (subject: string) => `mailto:${site.email.contact}?subject=${encodeURIComponent(subject)}`;
+const seatsOf = (label: string) => Number.parseInt(label, 10) || 1;
 
-// The switches are plain radio buttons and CSS (:has), because the site's CSP allows no inline script.
-// Inputs, in this order, are direct children of the .group/p wrapper: #bm #by (billing), #cb #cu (currency).
+// The billing and currency switches are radio buttons and CSS (:has), because the site's CSP allows no
+// inline script. Inputs, in this order, are direct children of the .group/p wrapper: #bm #by, #cb #cu.
 // Taka monthly is the default and the fallback for a browser without :has.
 const show = {
   'bdt-monthly': 'block group-has-[#by:checked]/p:hidden group-has-[#cu:checked]/p:hidden',
   'bdt-yearly': 'hidden group-has-[#by:checked~#cb:checked]/p:block',
   'usd-monthly': 'hidden group-has-[#bm:checked~#cu:checked]/p:block',
   'usd-yearly': 'hidden group-has-[#by:checked~#cu:checked]/p:block',
+} as const;
+// Inline variants of the same rules, for prices inside a sentence or a table header.
+const showInline = {
+  bdt: 'inline group-has-[#cu:checked]/p:hidden',
+  usd: 'hidden group-has-[#cu:checked]/p:inline',
 } as const;
 const views: { key: keyof typeof show; c: Currency; yearly: boolean }[] = [
   { key: 'bdt-monthly', c: 'bdt', yearly: false },
@@ -26,15 +41,21 @@ const views: { key: keyof typeof show; c: Currency; yearly: boolean }[] = [
   { key: 'usd-yearly', c: 'usd', yearly: true },
 ];
 
-const seg = 'cursor-pointer rounded-md px-3.5 py-2 text-sm font-semibold text-muted transition-colors hover:text-ink';
+const seg = 'cursor-pointer rounded-full px-4 py-2 text-sm font-semibold text-muted transition-colors hover:text-ink';
 // Written out in full so Tailwind can see every class (it does not read classes built from a template).
-const onClass = {
+const on = {
   bm: 'group-has-[#bm:checked]/p:bg-white group-has-[#bm:checked]/p:text-ink group-has-[#bm:checked]/p:shadow-[var(--shadow-card)] group-has-[#bm:focus-visible]/p:outline-2 group-has-[#bm:focus-visible]/p:outline-accent',
   by: 'group-has-[#by:checked]/p:bg-white group-has-[#by:checked]/p:text-ink group-has-[#by:checked]/p:shadow-[var(--shadow-card)] group-has-[#by:focus-visible]/p:outline-2 group-has-[#by:focus-visible]/p:outline-accent',
   cb: 'group-has-[#cb:checked]/p:bg-white group-has-[#cb:checked]/p:text-ink group-has-[#cb:checked]/p:shadow-[var(--shadow-card)] group-has-[#cb:focus-visible]/p:outline-2 group-has-[#cb:focus-visible]/p:outline-accent',
   cu: 'group-has-[#cu:checked]/p:bg-white group-has-[#cu:checked]/p:text-ink group-has-[#cu:checked]/p:shadow-[var(--shadow-card)] group-has-[#cu:focus-visible]/p:outline-2 group-has-[#cu:focus-visible]/p:outline-accent',
 } as const;
-const on = (id: keyof typeof onClass) => onClass[id];
+
+const seatLine = plans
+  .filter((p) => p.price && p.price.usd.extraSeat !== null)
+  .map((p) => ({ name: p.name, bdt: p.price!.bdt.extraSeat!, usd: p.price!.usd.extraSeat! }));
+
+// Categories shown open before "Full comparison"; the rest start folded.
+const openGroups = 3;
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -49,7 +70,7 @@ const faqSchema = {
 
 <Base
   title="Pricing"
-  description={`Chithii is free for one person, and paid plans start at ${money('bdt', firstPaid.price!.bdt.monthly)} (${money('usd', firstPaid.price!.usd.monthly)}) a month: every channel in one inbox, AI from your own knowledge with no per-reply fee, SLAs, reports and commerce. ${trialDays}-day free trial.`}
+  description={`Chithii is free for one person, and paid plans start at ${money('bdt', firstPaid.price!.bdt.monthly)} (${money('usd', firstPaid.price!.usd.monthly)}) a month: every channel in one inbox, unlimited AI replies from your own knowledge, SLAs, reports and commerce. ${trialDays}-day free trial.`}
   jsonLd={[faqSchema]}
 >
   <div class="group/p">
@@ -58,201 +79,301 @@ const faqSchema = {
     <input type="radio" name="currency" id="cb" class="sr-only" checked />
     <input type="radio" name="currency" id="cu" class="sr-only" />
 
-    <section class="border-b border-line bg-mist">
-      <div class="container-site pt-14 pb-10 sm:pt-20">
-        <p class="eyebrow">Pricing</p>
-        <h1 class="mt-3 max-w-3xl text-4xl font-semibold sm:text-5xl">One price for the whole team. No charge per AI reply.</h1>
-        <p class="lead mt-5 max-w-2xl">
-          Start free, then pick the plan for the way your team works. Every plan has unlimited conversations and AI that answers from your own
-          knowledge, and paid plans can be tried free for {trialDays} days.
-        </p>
+    <!-- Plans -->
+    <section class="relative overflow-hidden bg-mist">
+      <div class="pointer-events-none absolute -top-48 left-1/2 size-[46rem] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" aria-hidden="true"></div>
+      <div class="relative container-site pt-14 pb-16 sm:pt-20 sm:pb-20">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="eyebrow">Pricing</p>
+          <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Choose the right plan for your team</h1>
+          <p class="lead mt-4">Every plan includes AI that answers from your own knowledge, with unlimited AI replies and no charge per reply.</p>
 
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-          <div role="group" aria-label="Billing period" class="inline-flex rounded-lg border border-line bg-sunken p-1">
-            <label for="bm" class={`${seg} ${on('bm')}`}>Monthly</label>
-            <label for="by" class={`${seg} ${on('by')}`}>
-              Yearly <span class="ml-1 rounded-full bg-ok-soft px-2 py-0.5 text-xs font-semibold text-ok-ink">Save {yearlyDiscount}</span>
-            </label>
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div role="group" aria-label="Billing period" class="inline-flex rounded-full border border-line bg-sunken p-1">
+              <label for="bm" class={`${seg} ${on.bm}`}>Pay monthly</label>
+              <label for="by" class={`${seg} ${on.by}`}>
+                Pay yearly <span class="ml-1 rounded-full bg-ok-soft px-2 py-0.5 text-xs font-semibold text-ok-ink">Save {yearlyDiscount}</span>
+              </label>
+            </div>
+            <div role="group" aria-label="Currency" class="inline-flex rounded-full border border-line bg-sunken p-1">
+              <label for="cb" class={`${seg} ${on.cb}`}>৳ Taka</label>
+              <label for="cu" class={`${seg} ${on.cu}`}>$ US dollar</label>
+            </div>
           </div>
-          <div role="group" aria-label="Currency" class="inline-flex rounded-lg border border-line bg-sunken p-1">
-            <label for="cb" class={`${seg} ${on('cb')}`}>৳ Taka</label>
-            <label for="cu" class={`${seg} ${on('cu')}`}>$ US dollar</label>
-          </div>
+        </div>
+
+        <ul class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {
+            plans.map((plan) => {
+              const free = isFree(plan);
+              const included = seatsOf(plan.limits.seats);
+              const canAddSeats = !free && plan.price !== null && plan.price.usd.extraSeat !== null;
+              return (
+                <li
+                  data-plan={plan.id}
+                  class:list={[
+                    'relative flex flex-col rounded-2xl border bg-white p-6',
+                    plan.popular ? 'border-accent shadow-[var(--shadow-float)] ring-1 ring-accent' : 'border-line shadow-[var(--shadow-card)]',
+                  ]}
+                >
+                  {plan.popular && (
+                    <span class="absolute -top-3 right-6 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-white">Most popular</span>
+                  )}
+                  <h2 class="text-xl font-semibold">{plan.name}</h2>
+                  <p class="mt-2 min-h-[3rem] text-[0.95rem] leading-relaxed text-muted">{plan.tagline}</p>
+
+                  <div class="mt-5 min-h-[4.25rem]">
+                    {free ? (
+                      <div>
+                        <p class="flex items-baseline gap-1.5">
+                          <span class={`${showInline.bdt} text-4xl font-semibold tracking-tight`}>{money('bdt', 0)}</span>
+                          <span class={`${showInline.usd} text-4xl font-semibold tracking-tight`}>{money('usd', 0)}</span>
+                          <span class="text-sm text-muted">/ month</span>
+                        </p>
+                        <p class="mt-1.5 text-sm text-muted">Free, with no time limit</p>
+                      </div>
+                    ) : (
+                      views.map((v) => {
+                        const p = plan.price![v.c];
+                        const seat = p.extraSeat ?? 0;
+                        const base = v.yearly ? perMonthYearly(p) : p.monthly;
+                        return (
+                          <div class={show[v.key]}>
+                            <p class="flex items-baseline gap-1.5">
+                              <span class="text-4xl font-semibold tracking-tight" data-amount data-c={v.c} data-base={base} data-seat={seat}>
+                                {money(v.c, base)}
+                              </span>
+                              <span class="text-sm text-muted">/ month</span>
+                            </p>
+                            <p class="mt-1.5 text-sm text-muted">
+                              {v.yearly ? (
+                                <>
+                                  <span data-amount data-c={v.c} data-base={p.yearly} data-seat={seat * 12}>
+                                    {money(v.c, p.yearly)}
+                                  </span>{' '}
+                                  billed yearly
+                                </>
+                              ) : (
+                                'Billed monthly'
+                              )}
+                            </p>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {canAddSeats ? (
+                    <div class="mt-5 flex items-center justify-between rounded-lg border border-line bg-mist px-3 py-2" data-seats data-included={included}>
+                      <span class="text-sm font-medium">Seats</span>
+                      <span class="flex items-center gap-1">
+                        <button type="button" data-step="-1" class="hidden size-8 items-center justify-center rounded-md border border-line bg-white text-lg leading-none font-semibold text-ink hover:border-tide disabled:opacity-40 [.js_&]:flex" aria-label={`Fewer seats on ${plan.name}`}>−</button>
+                        <output class="min-w-8 text-center text-sm font-semibold" aria-live="polite">{included}</output>
+                        <button type="button" data-step="1" class="hidden size-8 items-center justify-center rounded-md border border-line bg-white text-lg leading-none font-semibold text-ink hover:border-tide [.js_&]:flex" aria-label={`More seats on ${plan.name}`}>+</button>
+                      </span>
+                    </div>
+                  ) : (
+                    <div class="mt-5 flex items-center justify-between rounded-lg border border-line bg-mist px-3 py-2">
+                      <span class="text-sm font-medium">Seats</span>
+                      <span class="min-w-8 py-1.5 text-center text-sm font-semibold">{included}</span>
+                    </div>
+                  )}
+
+                  <a href={mail(plan.cta.subject)} class:list={['btn mt-4 w-full', plan.popular ? 'btn-primary' : free ? 'btn-secondary' : 'btn-primary']}>
+                    {plan.cta.label}
+                  </a>
+
+                  <p class="mt-6 text-sm font-semibold text-ink">{plan.includesFrom ? `Everything in ${plan.includesFrom}, plus` : 'Key features'}</p>
+                  <ul class="mt-3 space-y-2.5 text-[0.95rem] leading-snug">
+                    {[plan.limits.seats, plan.limits.projects, plan.limits.whatsapp, ...plan.highlights].map((h, i) => (
+                      <li class="flex gap-2.5">
+                        <Icon name="tick" size={18} class="mt-0.5 shrink-0 text-ok" />
+                        <span class:list={['text-ink', i < 3 && 'font-medium']}>{h}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              );
+            })
+          }
+        </ul>
+
+        <p class="mt-8 text-center text-sm text-muted">
+          Extra seats:{' '}
+          {
+            seatLine.map((s, i) => (
+              <>
+                {i > 0 && ' · '}
+                {s.name} <span class={showInline.bdt}>{money('bdt', s.bdt)}</span><span class={showInline.usd}>{money('usd', s.usd)}</span>
+              </>
+            ))
+          } per seat / month.
+          <a href="#compare" class="ml-1 font-semibold">See all features</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Larger setup -->
+    <section class="bg-white pt-16 sm:pt-20">
+      <div class="container-site">
+        <div class="mx-auto max-w-4xl rounded-2xl border border-line bg-mist px-6 py-10 text-center sm:px-12">
+          <h2 class="text-2xl font-semibold sm:text-3xl">Need a larger or custom setup?</h2>
+          <p class="lead mx-auto mt-3 max-w-2xl">
+            For more than 10 seats, many brands or clients, custom integrations or help moving from your current tool, book a call. We will
+            suggest the setup that fits your business, confirmed in writing.
+          </p>
+          <a href={mail('Chithii: larger or custom setup')} class="btn btn-primary mt-6">Book a demo</a>
         </div>
       </div>
     </section>
 
-    <!-- Plans -->
-    <section class="bg-mist pb-16 sm:pb-24">
+    <!-- Add-ons -->
+    <section class="section bg-white" aria-labelledby="addons">
       <div class="container-site">
-        <ul class="grid gap-5 pt-10 md:grid-cols-2 xl:grid-cols-4">
+        <div class="mx-auto max-w-3xl text-center">
+          <h2 id="addons" class="text-3xl font-semibold sm:text-4xl">Add only what your business needs</h2>
+          <p class="lead mt-4">
+            Grow any paid plan with more seats, WhatsApp numbers or projects, or switch on a module from a higher plan. Add-ons are billed with your
+            plan.
+          </p>
+        </div>
+        <ul class="mt-12 grid gap-4 md:grid-cols-2">
           {
-            plans.map((plan) => (
-              <li
-                class:list={[
-                  'relative flex flex-col rounded-2xl border p-6',
-                  plan.popular ? 'border-tide bg-tide-deep text-tide-text shadow-[var(--shadow-float)]' : 'border-line bg-white shadow-[var(--shadow-card)]',
-                ]}
-              >
-                {plan.popular && (
-                  <span class="absolute -top-3 left-6 rounded-full bg-marigold px-3 py-1 text-xs font-semibold text-white">Most popular</span>
-                )}
-                <h2 class:list={['text-xl font-semibold', plan.popular && 'text-white']}>{plan.name}</h2>
-                <p class:list={['mt-2 min-h-[4.5rem] text-[0.95rem] leading-relaxed', plan.popular ? 'text-tide-muted' : 'text-muted']}>{plan.tagline}</p>
-
-                <div class="mt-5 min-h-[5.5rem]">
-                  {isFree(plan) ? (
-                    <div>
-                      <p class="flex items-baseline gap-1.5">
-                        <span class="text-4xl font-semibold tracking-tight text-ink">Free</span>
-                      </p>
-                      <p class="mt-1.5 text-sm text-muted">
-                        No time limit,
-                        <br />
-                        no card needed
-                      </p>
-                    </div>
-                  ) : plan.price ? (
-                    views.map((v) => {
-                      const p = plan.price![v.c];
-                      return (
-                        <div class={show[v.key]}>
-                          <p class="flex items-baseline gap-1.5">
-                            <span class:list={['text-4xl font-semibold tracking-tight', plan.popular ? 'text-white' : 'text-ink']}>
-                              {money(v.c, v.yearly ? perMonthYearly(p) : p.monthly)}
-                            </span>
-                            <span class:list={['text-sm', plan.popular ? 'text-tide-muted' : 'text-muted']}>/ month</span>
-                          </p>
-                          <p class:list={['mt-1.5 text-sm', plan.popular ? 'text-tide-muted' : 'text-muted']}>
-                            {v.yearly ? `${money(v.c, p.yearly)} billed yearly` : 'Billed monthly'}
-                            {p.extraSeat !== null && (
-                              <>
-                                <br />
-                                Extra seat {money(v.c, p.extraSeat)} / month
-                              </>
-                            )}
-                          </p>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div>
-                      <p class="text-4xl font-semibold tracking-tight text-ink">Custom</p>
-                      <p class="mt-1.5 text-sm text-muted">
-                        A price for your team size,
-                        <br />
-                        agreed in writing
-                      </p>
-                    </div>
-                  )}
+            addons.map((a) => (
+              <li class="card flex gap-4 p-5">
+                <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent-ink">
+                  <Icon name={a.icon} size={20} />
+                </span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                    <h3 class="font-semibold">{a.name}</h3>
+                    <p class="text-sm whitespace-nowrap text-muted">
+                      {a.price ? (
+                        <>
+                          {a.note && <span>{a.note} </span>}
+                          <span class={`${showInline.bdt} text-base font-semibold text-ink`}>{money('bdt', a.price.bdt)}</span>
+                          <span class={`${showInline.usd} text-base font-semibold text-ink`}>{money('usd', a.price.usd)}</span> {a.per}
+                        </>
+                      ) : (
+                        <span class="font-semibold text-accent-ink">{a.note}</span>
+                      )}
+                    </p>
+                  </div>
+                  <p class="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{a.body}</p>
                 </div>
-
-                <a
-                  href={mail(plan.cta.subject)}
-                  class:list={['btn mt-6 w-full', plan.popular ? 'btn-light' : plan.price && !isFree(plan) ? 'btn-primary' : 'btn-secondary']}
-                >
-                  {plan.cta.label}
-                </a>
-
-                <ul class:list={['mt-6 grid gap-1.5 border-y py-4 text-sm font-semibold', plan.popular ? 'border-tide-line text-white' : 'border-line text-ink']}>
-                  <li class="flex items-center gap-2"><Icon name="users" size={16} class={plan.popular ? 'text-accent-bright' : 'text-accent'} />{plan.limits.seats}</li>
-                  <li class="flex items-center gap-2"><Icon name="layers" size={16} class={plan.popular ? 'text-accent-bright' : 'text-accent'} />{plan.limits.projects}</li>
-                  <li class="flex items-center gap-2"><Icon name="whatsapp" size={16} class={plan.popular ? 'text-accent-bright' : 'text-accent'} />{plan.limits.whatsapp}</li>
-                </ul>
-
-                {plan.includesFrom && (
-                  <p class:list={['mt-4 text-sm font-semibold', plan.popular ? 'text-white' : 'text-ink']}>Everything in {plan.includesFrom}, plus:</p>
-                )}
-                <ul class="mt-3 space-y-2.5 text-[0.95rem] leading-snug">
-                  {plan.highlights.map((h) => (
-                    <li class="flex gap-2.5">
-                      <Icon name="tick" size={18} class:list={['mt-0.5 shrink-0', plan.popular ? 'text-accent-bright' : 'text-ok']} />
-                      <span class={plan.popular ? 'text-tide-text' : 'text-ink'}>{h}</span>
-                    </li>
-                  ))}
-                </ul>
               </li>
             ))
           }
         </ul>
+      </div>
+    </section>
 
-        <ul class="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted">
-          <li class="flex items-center gap-1.5"><Icon name="tick" size={16} class="text-ok" />A free plan with no time limit</li>
-          <li class="flex items-center gap-1.5"><Icon name="tick" size={16} class="text-ok" />{trialDays}-day free trial on paid plans</li>
-          <li class="flex items-center gap-1.5"><Icon name="tick" size={16} class="text-ok" />Unlimited conversations and AI replies</li>
-          <li class="flex items-center gap-1.5"><Icon name="tick" size={16} class="text-ok" />No per-reply or per-resolution AI fee</li>
-          <li class="flex items-center gap-1.5"><Icon name="tick" size={16} class="text-ok" />Pay by bKash, card or bank transfer</li>
-        </ul>
-        <p class="mt-4 text-center text-sm text-muted">
-          More than 10 seats or 5 projects? Add seats to Enterprise, or <a href="/contact">talk to us</a> about a plan sized to your team.
-        </p>
+    <!-- Comparison -->
+    <section class="section border-t border-line bg-mist" aria-labelledby="compare">
+      <div class="container-site">
+        <h2 id="compare" class="scroll-mt-24 text-center text-3xl font-semibold sm:text-4xl">Explore the best plan for your business</h2>
+        <p class="lead mx-auto mt-4 max-w-2xl text-center">Every feature listed is live in the app today. <a href="/features">See what each one does</a>.</p>
+
+        <!-- relative: the sr-only captions and headers inside are absolutely positioned and must not escape the scroll box. -->
+        <div class="relative mt-10 overflow-x-auto lg:overflow-visible">
+          <div class="min-w-[46rem]">
+            <!-- Plan names stay in view while the table scrolls (wide screens). -->
+            <div class="z-20 grid grid-cols-[2fr_repeat(4,1fr)] rounded-t-2xl border border-line bg-white lg:sticky lg:top-[4.5rem]">
+              <p class="px-4 py-4 text-sm font-semibold text-muted">Features</p>
+              {
+                plans.map((p) => (
+                  <div class:list={['px-3 py-4 text-center', p.popular && 'bg-accent-soft']}>
+                    <p class:list={['font-semibold', p.popular && 'text-accent-ink']}>{p.name}</p>
+                    <p class="mt-0.5 text-xs text-muted">
+                      {isFree(p) ? (
+                        'Free'
+                      ) : (
+                        <>
+                          from <span class={showInline.bdt}>{money('bdt', p.price!.bdt.monthly)}</span>
+                          <span class={showInline.usd}>{money('usd', p.price!.usd.monthly)}</span>/mo
+                        </>
+                      )}
+                    </p>
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="rounded-b-2xl border-x border-b border-line bg-white">
+              {
+                comparison.map((group, gi) => (
+                  <details class="group/d border-t border-line first:border-t-0" open={gi < openGroups}>
+                    <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-4 font-semibold [&::-webkit-details-marker]:hidden">
+                      {group.title}
+                      <span class="text-muted transition-transform group-open/d:rotate-180" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                      </span>
+                    </summary>
+                    <table class="w-full table-fixed border-collapse text-left text-[0.95rem]">
+                      <caption class="sr-only">{group.title}</caption>
+                      <colgroup>
+                        <col class="w-[40%]" />
+                        <col class="w-[15%]" />
+                        <col class="w-[15%]" />
+                        <col class="w-[15%]" />
+                        <col class="w-[15%]" />
+                      </colgroup>
+                      <thead class="sr-only">
+                        <tr>
+                          <th scope="col">Feature</th>
+                          {plans.map((p) => (
+                            <th scope="col">{p.name}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {group.rows.map((row) => (
+                          <tr class="border-t border-line">
+                            <th scope="row" class="px-4 py-3 font-normal text-ink">{row.label}</th>
+                            {row.cells.map((cell, i) => (
+                              <td class:list={['px-3 py-3 text-center', plans[i].popular && 'bg-accent-soft/40']}>
+                                {cell === true ? (
+                                  <span class="inline-flex size-6 items-center justify-center rounded-full bg-ok text-white">
+                                    <Icon name="tick" size={14} />
+                                    <span class="sr-only">Included</span>
+                                  </span>
+                                ) : cell === false ? (
+                                  <span class="text-subtle">
+                                    <span aria-hidden="true">--</span>
+                                    <span class="sr-only">Not included</span>
+                                  </span>
+                                ) : cell === 'Add-on' ? (
+                                  <span class="rounded-full border border-marigold-line bg-marigold-soft px-2 py-0.5 text-xs font-semibold text-marigold-ink">Add-on</span>
+                                ) : (
+                                  <span class="text-sm font-medium text-ink">{cell}</span>
+                                )}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </details>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+        <p class="mt-4 text-center text-sm text-muted">Open any category to see every feature in it.</p>
       </div>
     </section>
   </div>
 
-  <!-- Comparison -->
-  <section class="section bg-white" aria-labelledby="compare">
-    <div class="container-site">
-      <h2 id="compare" class="text-3xl font-semibold sm:text-4xl">Compare plans</h2>
-      <p class="lead mt-3 max-w-2xl">Every feature listed is live in the app today. <a href="/features">See what each one does</a>.</p>
-
-      <div class="mt-10 overflow-x-auto rounded-2xl border border-line">
-        <table class="w-full min-w-[46rem] border-collapse text-left text-[0.95rem]">
-          <thead>
-            <tr class="bg-mist">
-              <th scope="col" class="sticky left-0 z-10 w-[38%] bg-mist px-4 py-4 font-semibold"><span class="sr-only">Feature</span></th>
-              {plans.map((p) => (
-                <th scope="col" class:list={['px-4 py-4 text-center font-semibold', p.popular && 'text-accent-ink']}>{p.name}</th>
-              ))}
-            </tr>
-          </thead>
-          {
-            comparison.map((group) => (
-              <tbody>
-                <tr>
-                  <th scope="rowgroup" colspan="5" class="sticky left-0 border-t border-line bg-white px-4 pt-6 pb-2 text-xs font-semibold tracking-[0.08em] text-accent uppercase">
-                    {group.title}
-                  </th>
-                </tr>
-                {group.rows.map((row) => (
-                  <tr class="border-t border-line">
-                    <th scope="row" class="sticky left-0 z-10 bg-white px-4 py-3 font-normal text-ink">{row.label}</th>
-                    {row.cells.map((cell, i) => (
-                      <td class:list={['px-4 py-3 text-center', plans[i].popular && 'bg-accent-soft/50']}>
-                        {cell === true ? (
-                          <span class="inline-flex text-ok"><Icon name="tick" size={18} /><span class="sr-only">Included</span></span>
-                        ) : cell === false ? (
-                          <span class="text-subtle" aria-label="Not included">—</span>
-                        ) : (
-                          <span class="text-sm font-medium text-ink">{cell}</span>
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            ))
-          }
-        </table>
-      </div>
-    </div>
-  </section>
-
   <!-- FAQ -->
-  <section class="section bg-mist" aria-labelledby="pricing-faq">
-    <div class="container-site grid gap-10 lg:grid-cols-[1fr_1.6fr]">
-      <div>
-        <h2 id="pricing-faq" class="text-3xl font-semibold sm:text-4xl">Pricing questions</h2>
-        <p class="lead mt-4">
-          Something not covered? Email <a href={`mailto:${site.email.contact}`}>{site.email.contact}</a> and we will answer, in writing, before you pay.
-        </p>
-      </div>
-      <FAQ items={pricingFaqs} />
+  <section class="section bg-white" aria-labelledby="pricing-faq">
+    <div class="container-site max-w-4xl">
+      <h2 id="pricing-faq" class="text-center text-3xl font-semibold sm:text-4xl">Frequently asked questions</h2>
+      <div class="mt-10"><FAQ items={pricingFaqs} /></div>
+      <p class="mt-8 text-center text-muted">
+        Something not covered? Email <a href={`mailto:${site.email.contact}`}>{site.email.contact}</a> and we will answer, in writing, before you pay.
+      </p>
     </div>
   </section>
 
-  <CTA
-    title="Try Chithii with your own conversations"
-    body={`Start on the Free plan, or try any paid plan free for ${trialDays} days. Tell us your channels and team size, and we will set up a workspace for you.`}
-  />
+  <script is:inline src="/js/pricing-seats.js" defer></script>
 </Base>
