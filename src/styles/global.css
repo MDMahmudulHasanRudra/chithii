@@ -2,38 +2,48 @@
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/noto-sans-bengali';
 
-/* Chithii "Tide" palette — the same tokens the Chithii app uses. */
+/* Chithii palette, taken from the logo (logo/Colorful Chithii Ribbon Logo.png): the navy of the
+   "hithii" wordmark for dark surfaces and text, the ribbon's violet-blue for links and highlights,
+   its cyan on dark backgrounds, and the swoosh's orange as the warm second colour. The token names
+   (tide, accent, marigold) are kept so every page follows without edits. */
 @theme {
   --font-sans: 'Inter Variable', 'Noto Sans Bengali Variable', ui-sans-serif, system-ui, sans-serif;
   --font-bangla: 'Noto Sans Bengali Variable', 'Inter Variable', sans-serif;
 
-  --color-tide: #0b3d45;
-  --color-tide-hover: #0e4c55;
-  --color-tide-deep: #083138;
-  --color-tide-night: #06191d;
-  --color-tide-surface: #0b252a;
-  --color-tide-line: #173a40;
-  --color-tide-text: #e6f2f2;
-  --color-tide-muted: #93b0b4;
+  --color-tide: #0d1470;
+  --color-tide-hover: #1a22a0;
+  --color-tide-deep: #060b4f;
+  --color-tide-night: #040630;
+  --color-tide-surface: #0a0f45;
+  --color-tide-line: #1f2670;
+  --color-tide-text: #ebedff;
+  --color-tide-muted: #a6abd8;
 
-  --color-ink: #0f2a2f;
-  --color-muted: #4d666b;
-  --color-subtle: #7a8f93;
-  --color-line: #dce6e6;
-  --color-line-strong: #c2d0d1;
-  --color-mist: #f3f7f7;
-  --color-sunken: #eaf1f1;
+  --color-ink: #070b3d;
+  --color-muted: #4b5280;
+  --color-subtle: #7c82a8;
+  --color-line: #e2e4f2;
+  --color-line-strong: #c8cbe3;
+  --color-mist: #f5f6fd;
+  --color-sunken: #eceefb;
 
-  --color-accent: #0e7c86;
-  --color-accent-bright: #2bb3bd;
-  --color-accent-soft: #e4f4f4;
-  --color-accent-line: #b4dcdd;
-  --color-accent-ink: #0a656e;
+  --color-accent: #4318ff;
+  --color-accent-bright: #18c6ff;
+  --color-accent-soft: #efebff;
+  --color-accent-line: #cdc2ff;
+  --color-accent-ink: #3510d6;
 
-  --color-marigold: #d98a14;
-  --color-marigold-soft: #fdf3e0;
-  --color-marigold-line: #f5d9a0;
-  --color-marigold-ink: #8f5a05;
+  --color-marigold: #ff630d;
+  --color-marigold-soft: #fff1e7;
+  --color-marigold-line: #ffd0b0;
+  --color-marigold-ink: #b23c00;
+
+  /* The swoosh, end to end. */
+  --color-brand-violet: #3400fa;
+  --color-brand-purple: #9f03fb;
+  --color-brand-pink: #f50368;
+  --color-brand-amber: #fca601;
+  --color-brand-cyan: #01d1fd;
 
   --color-ok: #16a34a;
   --color-ok-soft: #f0fdf4;
@@ -99,6 +109,16 @@
   }
   .eyebrow {
     @apply text-[0.8rem] font-semibold tracking-[0.08em] text-accent uppercase;
+  }
+  /* The logo's swoosh as a fill, and as text on dark backgrounds (lighter stops, readable on navy). */
+  .bg-brand-gradient {
+    background-image: linear-gradient(90deg, var(--color-brand-violet), var(--color-brand-purple) 35%, var(--color-brand-pink) 65%, var(--color-brand-amber));
+  }
+  .text-brand-gradient {
+    background-image: linear-gradient(90deg, #8f6bff, #e45cff 35%, #ff4f8b 65%, #ffb21e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   .card {
     @apply rounded-2xl border border-line bg-white shadow-[var(--shadow-card)];

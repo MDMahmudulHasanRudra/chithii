@@ -1,35 +1,122 @@
-// Generates the Chithii favicon, app icons and Open Graph image into public/.
-// Run with `npm run brand` after changing the mark or colours, then commit the output.
+// Generates every Chithii logo file, the favicon, the app icons and the Open Graph image
+// from the master logo, logo/Colorful Chithii Ribbon Logo.png (a ribbon "C", the navy
+// "hithii" wordmark and a violet-to-amber swoosh, on white).
+// Run with `npm run brand` after changing the master logo, then commit the output.
 import sharp from 'sharp';
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 
-const TIDE = '#0b3d45';
-const DEEP = '#083138';
-const ACCENT = '#2bb3bd';
+const SOURCE = 'logo/Colorful Chithii Ribbon Logo.png';
+const NAVY = '#040946'; // the wordmark
+const NIGHT = '#040630';
 
-const mark = (size, { radius = 0.22, bg = TIDE, fg = '#ffffff' } = {}) => `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="${size}" height="${size}">
-  <rect width="32" height="32" rx="${32 * radius}" fill="${bg}"/>
-  <g stroke="${fg}" stroke-width="2.4" stroke-linecap="round" fill="none">
-    <path d="M8.5 21V11.6A3.1 3.1 0 0 1 11.6 8.5h5"/>
-    <path d="M23.5 11v9.4a3.1 3.1 0 0 1-3.1 3.1h-5"/>
-  </g>
-  <circle cx="21.8" cy="8.6" r="3" fill="${fg}"/>
-  <circle cx="10.2" cy="23.4" r="3" fill="${fg}"/>
-</svg>`;
+// ---- 1. The master on a transparent background ("colour to alpha" against white) ---------------
+const { data, info } = await sharp(SOURCE).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+const { width: W, height: H } = info;
+const rgba = Buffer.alloc(W * H * 4);
+for (let i = 0, o = 0; i < data.length; i += 3, o += 4) {
+  const r = data[i], g = data[i + 1], b = data[i + 2];
+  const a = Math.max(255 - r, 255 - g, 255 - b) / 255;
+  if (a < 0.02) continue; // pure background: fully transparent
+  // Un-mix the white: the colour that, at alpha a over white, gives the pixel we see.
+  rgba[o] = Math.round((r - 255 * (1 - a)) / a);
+  rgba[o + 1] = Math.round((g - 255 * (1 - a)) / a);
+  rgba[o + 2] = Math.round((b - 255 * (1 - a)) / a);
+  rgba[o + 3] = Math.round(a * 255);
+}
+const transparent = () => sharp(rgba, { raw: { width: W, height: H, channels: 4 } });
 
-const png = (svg, size) => sharp(Buffer.from(svg)).resize(size, size).png().toBuffer();
+// The same with the navy wordmark turned white, for dark backgrounds. The wordmark starts at
+// x ≈ 700 in the master and is the only dark, unsaturated-bright part there.
+const WORDMARK_X = 700;
+const light = Buffer.from(rgba);
+for (let y = 0; y < H; y++) {
+  for (let x = WORDMARK_X; x < W; x++) {
+    const o = (y * W + x) * 4;
+    if (light[o + 3] === 0) continue;
+    if (Math.max(light[o], light[o + 1], light[o + 2]) < 140) light[o] = light[o + 1] = light[o + 2] = 255;
+  }
+}
 
-// favicon.svg
-await writeFile('public/favicon.svg', mark(32).trim() + '\n');
+// Bounding box of everything visible, and of the ribbon "C" alone (left of the wordmark).
+function bbox(buf, x0, x1, minAlpha = 24) {
+  let left = x1, right = x0, top = H, bottom = 0;
+  for (let y = 0; y < H; y++) {
+    for (let x = x0; x < x1; x++) {
+      if (buf[(y * W + x) * 4 + 3] >= minAlpha) {
+        if (x < left) left = x;
+        if (x > right) right = x;
+        if (y < top) top = y;
+        if (y > bottom) bottom = y;
+      }
+    }
+  }
+  return { left, top, width: right - left + 1, height: bottom - top + 1 };
+}
+const full = bbox(rgba, 0, W);
 
-// PNG icons (apple-touch-icon is full-bleed: iOS rounds it)
-await writeFile('public/apple-touch-icon.png', await png(mark(180, { radius: 0 }), 180));
-await writeFile('public/icon-192.png', await png(mark(192), 192));
-await writeFile('public/icon-512.png', await png(mark(512), 512));
+// The ribbon C alone: the same pixels without the navy wordmark (the C's upper tip reaches past the
+// first stroke of the "h", so a plain crop would keep a sliver of it).
+const cOnly = Buffer.from(rgba);
+for (let y = 0; y < H; y++) {
+  for (let x = WORDMARK_X; x < W; x++) {
+    const o = (y * W + x) * 4;
+    if (Math.max(cOnly[o], cOnly[o + 1], cOnly[o + 2]) < 140) cOnly[o + 3] = 0;
+  }
+}
+// ...and without the start of the swoosh, which begins under the C at about (595, 690).
+const SWOOSH = { x: 560, y: 660 };
+for (let y = SWOOSH.y; y < H; y++) for (let x = SWOOSH.x; x < W; x++) cOnly[(y * W + x) * 4 + 3] = 0;
+const C = bbox(cOnly, 0, WORDMARK_X + 60, 96);
+
+await mkdir('public/brand', { recursive: true });
+const LOGO_H = 96; // 2× the 48px it is shown at
+const logo = async (buf, name) => {
+  const img = sharp(buf, { raw: { width: W, height: H, channels: 4 } }).extract(full).resize({ height: LOGO_H });
+  await img.clone().png({ compressionLevel: 9 }).toFile(`public/brand/${name}.png`);
+  await img.clone().webp({ quality: 92, alphaQuality: 100 }).toFile(`public/brand/${name}.webp`);
+};
+await logo(rgba, 'chithii-logo');
+await logo(light, 'chithii-logo-light');
+
+// The ribbon C, square, centred, for icons.
+const side = Math.max(C.width, C.height);
+const markPng = await sharp(cOnly, { raw: { width: W, height: H, channels: 4 } })
+  .extract(C)
+  .extend({
+    top: Math.floor((side - C.height) / 2),
+    bottom: Math.ceil((side - C.height) / 2),
+    left: Math.floor((side - C.width) / 2),
+    right: Math.ceil((side - C.width) / 2),
+    background: { r: 0, g: 0, b: 0, alpha: 0 },
+  })
+  .png()
+  .toBuffer();
+
+/** The C on a white rounded tile (or full-bleed square), `pad` = share of the side left empty. */
+const icon = async (size, { radius = 0.22, pad = 0.14, bg = '#ffffff' } = {}) => {
+  const inner = Math.round(size * (1 - 2 * pad));
+  const tile = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${size * radius}" fill="${bg}"/></svg>`,
+  );
+  const c = await sharp(markPng).resize(inner, inner).toBuffer();
+  return sharp(tile).composite([{ input: c, gravity: 'center' }]).png().toBuffer();
+};
+
+await sharp(markPng).resize(512, 512).png().toFile('public/brand/chithii-mark.png');
+await writeFile('public/apple-touch-icon.png', await icon(180, { radius: 0, pad: 0.12 }));
+await writeFile('public/icon-192.png', await icon(192));
+await writeFile('public/icon-512.png', await icon(512));
+
+// favicon.svg: the 64px C embedded as a PNG (the ribbon's gradients are a raster). No tile, so it
+// reads on light and dark browser tabs alike.
+const fav64 = await sharp(markPng).resize(64, 64).png().toBuffer();
+await writeFile(
+  'public/favicon.svg',
+  `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><image width="64" height="64" href="data:image/png;base64,${fav64.toString('base64')}"/></svg>\n`,
+);
 
 // favicon.ico containing one 48×48 PNG
-const ico48 = await png(mark(48), 48);
+const ico48 = await sharp(markPng).resize(48, 48).png().toBuffer();
 const header = Buffer.alloc(22);
 header.writeUInt16LE(0, 0); // reserved
 header.writeUInt16LE(1, 2); // type: icon
@@ -44,31 +131,27 @@ header.writeUInt32LE(ico48.length, 14); // size
 header.writeUInt32LE(22, 18); // offset
 await writeFile('public/favicon.ico', Buffer.concat([header, ico48]));
 
-// Open Graph image 1200×630
+// ---- 2. Open Graph image 1200×630: the logo on white, the promise in navy, the swoosh colours --------
+const ogLogo = await sharp(rgba, { raw: { width: W, height: H, channels: 4 } }).extract(full).resize({ width: 560 }).png().toBuffer();
 const og = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
-    <radialGradient id="glow" cx="0.85" cy="0.1" r="0.7">
-      <stop offset="0" stop-color="${ACCENT}" stop-opacity="0.35"/>
-      <stop offset="1" stop-color="${ACCENT}" stop-opacity="0"/>
-    </radialGradient>
+    <linearGradient id="swoosh" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#3400fa"/>
+      <stop offset="0.35" stop-color="#9f03fb"/>
+      <stop offset="0.65" stop-color="#f50368"/>
+      <stop offset="1" stop-color="#fca601"/>
+    </linearGradient>
   </defs>
-  <rect width="1200" height="630" fill="${DEEP}"/>
-  <rect width="1200" height="630" fill="url(#glow)"/>
-  <g transform="translate(96 150) scale(3.6)">
-    <rect width="32" height="32" rx="7" fill="#ffffff"/>
-    <g stroke="${TIDE}" stroke-width="2.4" stroke-linecap="round" fill="none">
-      <path d="M8.5 21V11.6A3.1 3.1 0 0 1 11.6 8.5h5"/>
-      <path d="M23.5 11v9.4a3.1 3.1 0 0 1-3.1 3.1h-5"/>
-    </g>
-    <circle cx="21.8" cy="8.6" r="3" fill="${TIDE}"/>
-    <circle cx="10.2" cy="23.4" r="3" fill="${TIDE}"/>
-  </g>
-  <text x="250" y="232" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="92" font-weight="700" fill="#ffffff" letter-spacing="-2">Chithii</text>
-  <text x="96" y="380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="52" font-weight="600" fill="#ffffff" letter-spacing="-1">Every conversation. Every team.</text>
-  <text x="96" y="448" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="52" font-weight="600" fill="#ffffff" letter-spacing="-1">Every channel. One place.</text>
-  <text x="96" y="540" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="28" fill="#93b0b4">WhatsApp · Messenger · Instagram · Telegram · Website chat   —   chithii.com</text>
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect y="618" width="1200" height="12" fill="url(#swoosh)"/>
+  <text x="96" y="388" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="52" font-weight="700" fill="${NAVY}" letter-spacing="-1">Every conversation. Every team.</text>
+  <text x="96" y="456" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="52" font-weight="700" fill="${NAVY}" letter-spacing="-1">Every channel. One place.</text>
+  <text x="96" y="540" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="28" fill="#4b5280">WhatsApp · Messenger · Instagram · Telegram · Website chat   —   chithii.com</text>
 </svg>`;
-await sharp(Buffer.from(og)).png().toFile('public/og-image.png');
+await sharp(Buffer.from(og))
+  .composite([{ input: ogLogo, top: 70, left: 80 }])
+  .png()
+  .toFile('public/og-image.png');
 
-console.log('Brand assets written to public/');
+console.log(`Brand assets written to public/ (logo ${full.width}×${full.height} in the master, C ${C.width}×${C.height}; night ${NIGHT}).`);
