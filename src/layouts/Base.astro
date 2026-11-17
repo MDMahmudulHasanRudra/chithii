@@ -39,6 +39,8 @@ const schema = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Google Tag Manager (GTM-PK2HSTC4): public/js/gtm.js, a file because the CSP allows no inline script. -->
+    <script is:inline src="/js/gtm.js"></script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -64,6 +66,8 @@ const schema = [
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
   <body class="flex min-h-screen flex-col">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PK2HSTC4" height="0" width="0" class="hidden" title="Google Tag Manager"></iframe></noscript>
     <a
       href="#main"
       class="sr-only z-50 rounded-md bg-ink px-4 py-2 font-semibold text-white focus:not-sr-only focus:absolute focus:top-3 focus:left-3"

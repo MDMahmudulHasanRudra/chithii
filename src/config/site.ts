@@ -15,7 +15,7 @@ export const site = {
   founders: ['MD Mahmudul Hasan Rudra', 'Sifat A Rabbi'],
   location: 'Dhaka, Bangladesh',
   // Legal pages: effective date of the original policies and date of this revision.
-  legal: { effective: '27 October 2026', updated: '13 November 2026' },
+  legal: { effective: '27 October 2026', updated: '17 November 2026' },
 } as const;
 
 export const nav = [

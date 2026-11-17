@@ -1,6 +1,8 @@
-# Security headers: strict CSP, no third-party anything.
+# Security headers: strict CSP. The only third party is Google Tag Manager (GTM-PK2HSTC4) and the Google
+# Analytics hosts its tags use (Google's CSP guidance for GTM and GA4). Tags that inject inline script
+# (GTM "Custom HTML") are still blocked by script-src.
 /*
-  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; style-src 'self'; script-src 'self' https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src https://www.googletagmanager.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
   Referrer-Policy: strict-origin-when-cross-origin
   X-Content-Type-Options: nosniff

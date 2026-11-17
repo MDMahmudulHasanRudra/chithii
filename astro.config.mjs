@@ -4,7 +4,8 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // Same stack as getassist.pro: static Astro, Tailwind v4, self-hosted fonts,
-// zero client-side JavaScript, sitemap-index.xml. Served from Cloudflare.
+// sitemap-index.xml. Client-side JavaScript only in public/js (pricing calculators, Google Tag Manager),
+// because the CSP allows no inline script. Served from Cloudflare.
 export default defineConfig({
   site: 'https://chithii.com',
   trailingSlash: 'never',
