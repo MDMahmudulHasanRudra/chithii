@@ -1,11 +1,14 @@
 {
-  // Cloudflare Workers static assets. `npm run deploy` builds and uploads dist/.
-  // public/_headers (security headers) and public/_redirects are honoured.
-  "name": "chithii-site",
+  // Cloudflare Workers static assets. Cloudflare Workers Builds runs `npm run build` and `npx wrangler deploy`
+  // on every push to main. public/_headers (security headers) and public/_redirects are honoured.
+  // The name matches the Worker that Workers Builds deploys to ("chithi").
+  "name": "chithi",
   "compatibility_date": "2026-11-01",
-  // Attach the apex domain (the chithii.com zone is already on Cloudflare).
+  // chithii.com is served through a Worker ROUTE, not a "custom domain": the apex already has its own DNS
+  // record, and Cloudflare refuses a custom domain on a hostname with DNS records (error 100117). A failed
+  // custom-domain step also dropped the route, which took the site down with Error 1000 (17 Nov 2026).
   // www.chithii.com is redirected to the apex with a Cloudflare Redirect Rule.
-  "routes": [{ "pattern": "chithii.com", "custom_domain": true }],
+  "routes": [{ "pattern": "chithii.com/*", "zone_name": "chithii.com" }],
   "workers_dev": true,
   "assets": {
     "directory": "./dist",
