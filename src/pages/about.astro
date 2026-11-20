@@ -15,7 +15,7 @@ const personSchema = site.founders.map((name) => ({
   '@context': 'https://schema.org',
   '@type': 'Person',
   name,
-  jobTitle: 'Co-founder',
+  jobTitle: 'Founder',
   worksFor: { '@type': 'Organization', name: site.name, url: site.url },
   workLocation: { '@type': 'Place', name: site.location },
 }));
@@ -84,7 +84,7 @@ const initials = (n: string) =>
               </span>
               <div>
                 <p class="text-xl font-semibold">{name}</p>
-                <p class="mt-1 text-muted">Co-founder, {site.name} · {site.location}</p>
+                <p class="mt-1 text-muted">Founder, {site.name} · {site.location}</p>
               </div>
             </li>
           ))
