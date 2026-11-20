@@ -14,6 +14,8 @@ import {
   trialDays,
   yearlyDiscount,
   custom,
+  rates,
+  valueComparison,
   type Currency,
 } from '../data/pricing';
 
@@ -66,9 +68,6 @@ const planFacts = JSON.stringify(
     })),
 );
 
-const seatLine = plans
-  .filter((p) => p.price && p.price.usd.extraSeat !== null)
-  .map((p) => ({ name: p.name, bdt: p.price!.bdt.extraSeat!, usd: p.price!.usd.extraSeat! }));
 
 // Categories shown open before "Full comparison"; the rest start folded.
 const openGroups = 3;
@@ -201,10 +200,10 @@ const faqSchema = {
 
                   <p class="mt-6 text-sm font-semibold text-ink">{plan.includesFrom ? `Everything in ${plan.includesFrom}, plus` : 'Key features'}</p>
                   <ul class="mt-3 space-y-2.5 text-[0.95rem] leading-snug">
-                    {[plan.limits.seats, plan.limits.projects, plan.limits.whatsapp, ...plan.highlights].map((h, i) => (
+                    {[plan.limits.seats, plan.limits.projects, plan.limits.whatsapp, plan.limits.storage, ...plan.highlights].map((h, i) => (
                       <li class="flex gap-2.5">
                         <Icon name="tick" size={18} class="mt-0.5 shrink-0 text-ok" />
-                        <span class:list={['text-ink', i < 3 && 'font-medium']}>{h}</span>
+                        <span class:list={['text-ink', i < 4 && 'font-medium']}>{h}</span>
                       </li>
                     ))}
                   </ul>
@@ -345,16 +344,58 @@ const faqSchema = {
         </ul>
 
         <p class="mt-8 text-center text-sm text-muted">
-          Extra seats:{' '}
-          {
-            seatLine.map((s, i) => (
-              <>
-                {i > 0 && ' · '}
-                {s.name} <span class={showInline.bdt}>{money('bdt', s.bdt)}</span><span class={showInline.usd}>{money('usd', s.usd)}</span>
-              </>
-            ))
-          } per seat / month.
+          On every paid plan: extra seat <span class={showInline.bdt}>{money('bdt', rates.extraSeat.bdt)}</span><span class={showInline.usd}>{money('usd', rates.extraSeat.usd)}</span>,
+          extra project <span class={showInline.bdt}>{money('bdt', rates.extraProject.bdt)}</span><span class={showInline.usd}>{money('usd', rates.extraProject.usd)}</span>,
+          extra 5 GB storage <span class={showInline.bdt}>{money('bdt', rates.extraStorage.bdt)}</span><span class={showInline.usd}>{money('usd', rates.extraStorage.usd)}</span> a month.
           <a href="#compare" class="ml-1 font-semibold">See all features</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Value: what a 5-person team pays -->
+    <section class="bg-white pt-16 sm:pt-20" aria-labelledby="value">
+      <div class="container-site">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="eyebrow">Compare before you choose</p>
+          <h2 id="value" class="mt-3 text-3xl font-semibold sm:text-4xl">What a 5-person team pays each month</h2>
+          <p class="lead mt-4">
+            For WhatsApp, Facebook, Instagram and AI replies. Most tools charge per agent and again for AI; a Chithii plan already includes the
+            seats, every channel and unlimited AI replies.
+          </p>
+        </div>
+        <div class="mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border border-line">
+          <table class="w-full border-collapse text-left text-[0.95rem]">
+            <caption class="sr-only">Monthly price for a 5-person team</caption>
+            <thead class="bg-mist">
+              <tr>
+                <th scope="col" class="px-4 py-3 font-semibold">Product</th>
+                <th scope="col" class="px-4 py-3 text-right font-semibold">Per month</th>
+                <th scope="col" class="hidden px-4 py-3 font-semibold sm:table-cell">What that includes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                valueComparison.rows.map((row) => (
+                  <tr class:list={['border-t border-line', row.ours && 'bg-accent-soft']}>
+                    <th scope="row" class:list={['px-4 py-3 align-top', row.ours ? 'font-semibold text-accent-ink' : 'font-medium text-ink']}>
+                      {row.name}
+                      <span class="mt-1 block text-xs font-normal text-muted sm:hidden">{row.note}</span>
+                    </th>
+                    <td class:list={['px-4 py-3 text-right align-top whitespace-nowrap', row.ours ? 'text-lg font-semibold text-accent-ink' : 'text-ink']}>
+                      <span class={showInline.bdt}>{money('bdt', row.bdt ?? row.usd * valueComparison.rate)}</span>
+                      <span class={showInline.usd}>{money('usd', row.usd)}</span>
+                    </td>
+                    <td class="hidden px-4 py-3 align-top text-sm text-muted sm:table-cell">{row.note}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="mx-auto mt-4 max-w-4xl text-center text-xs leading-relaxed text-muted">
+          Other products: their published monthly prices on {valueComparison.checked} (Tidio billed yearly), converted at ৳{valueComparison.rate} per
+          US dollar, for the plan that covers these channels and AI. Prices change; check each vendor’s own pricing page. With Chithii you pay your
+          own AI provider for AI usage. Product names are trademarks of their owners.
         </p>
       </div>
     </section>
