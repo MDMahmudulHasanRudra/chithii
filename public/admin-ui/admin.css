@@ -1,0 +1,78 @@
+/* The pricing admin portal (chithii.com/admin). Plain CSS in a file: the CSP allows no inline styles. */
+:root {
+  --navy: #060b4f;
+  --ink: #070b3d;
+  --muted: #4b5280;
+  --line: #e2e4f2;
+  --mist: #f5f6fd;
+  --accent: #4318ff;
+  --ok: #15803d;
+  --warn: #b23c00;
+  --error: #dc2626;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--mist);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+.shell { max-width: 72rem; margin: 0 auto; padding: 1.5rem 1rem 8rem; }
+.top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; font-weight: 600; color: var(--muted); }
+.top img { height: 40px; width: auto; }
+h1 { font-size: 1.6rem; margin: 0; }
+h3 { margin: 0 0 0.75rem; font-size: 1.1rem; }
+a { color: var(--accent); }
+code { background: #eceefb; padding: 0.1rem 0.35rem; border-radius: 4px; }
+.muted { color: var(--muted); }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.bar form { margin: 0; }
+
+.card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem; }
+.login { max-width: 24rem; margin: 3rem auto; display: grid; gap: 0.6rem; }
+.login h1 { font-size: 1.4rem; }
+.error { color: var(--error); font-weight: 600; margin: 0; }
+
+label, .label { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+input[type='text'], input[type='number'], input[type='password'], textarea, select {
+  width: 100%; font: inherit; color: inherit; padding: 0.55rem 0.7rem; border: 1px solid #c8cbe3; border-radius: 8px; background: #fff;
+}
+input:focus, textarea:focus, select:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+textarea { resize: vertical; line-height: 1.45; }
+textarea.code { font-family: ui-monospace, Consolas, monospace; font-size: 0.85rem; }
+button {
+  font: inherit; font-weight: 600; cursor: pointer; border: 0; border-radius: 8px; padding: 0.6rem 1rem; background: var(--navy); color: #fff;
+}
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+button.ghost { background: #fff; color: var(--navy); border: 1px solid #c8cbe3; }
+button.mini { padding: 0.2rem 0.55rem; font-size: 0.8rem; background: #fff; color: var(--navy); border: 1px solid #c8cbe3; }
+button.danger { color: var(--error); }
+
+.app { display: grid; gap: 0.75rem; margin-top: 1rem; }
+.section { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 0 1.25rem; }
+.section > summary { cursor: pointer; padding: 1rem 0; font-weight: 700; font-size: 1.05rem; }
+.section[open] { padding-bottom: 1.25rem; }
+.section > .muted { margin-top: 0; }
+.field { display: grid; gap: 0.3rem; margin-bottom: 0.75rem; }
+.field small { color: var(--muted); font-size: 0.8rem; }
+.field.check { display: flex; align-items: center; gap: 0.5rem; }
+.pair { display: grid; gap: 0 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); }
+.cards .card { background: var(--mist); }
+.list { display: grid; gap: 0.75rem; }
+.item { border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem; background: var(--mist); }
+.item .item { background: #fff; }
+.item-tools { display: flex; gap: 0.35rem; justify-content: flex-end; margin-bottom: 0.5rem; }
+.checks { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+.checks span { display: inline-flex; align-items: center; gap: 0.3rem; }
+.cells { display: grid; gap: 0.5rem; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+.cell { display: grid; gap: 0.25rem; }
+
+.savebar {
+  position: fixed; left: 0; right: 0; bottom: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  padding: 0.8rem max(1rem, calc((100vw - 72rem) / 2)); background: #fff; border-top: 1px solid var(--line); box-shadow: 0 -8px 24px -16px rgb(7 11 61 / 0.3);
+}
+.savebar input { flex: 1 1 18rem; width: auto; }
+.status { margin: 0; font-size: 0.9rem; flex: 1 1 100%; }
+.status.ok { color: var(--ok); }
+.status.warn { color: var(--warn); }
+.status.error { color: var(--error); }
+.problems { margin: 0; padding-left: 1.2rem; color: var(--error); font-size: 0.9rem; flex: 1 1 100%; }

@@ -10,6 +10,7 @@
   var usdWhole = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
   var usdCents = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function money(c, n) {
+    if (window.ChithiiCurrency) return window.ChithiiCurrency.format(c, n);
     if (c === 'bdt') return '৳' + bdt.format(Math.round(n));
     var cents = Math.round(n * 100);
     return '$' + (cents % 100 === 0 ? usdWhole : usdCents).format(cents / 100);
@@ -113,7 +114,7 @@
       set('[data-custom-yearly="' + c + '-yearly"]', m * 12 * (1 - discount));
     });
 
-    var c = isOn('cu') ? 'usd' : 'bdt';
+    var c = isOn('cu') || isOn('cl') ? 'usd' : 'bdt';
     var yearly = isOn('by');
     var mine = monthly(c) * (yearly ? 1 - discount : 1);
     var best = cheaperPlan(c, yearly);
@@ -141,7 +142,8 @@
   options.forEach(function (o) {
     o.addEventListener('change', render);
   });
-  ['bm', 'by', 'cb', 'cu'].forEach(function (id) {
+  document.addEventListener('chithii:currency', render);
+  ['bm', 'by', 'cb', 'cu', 'cl'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.addEventListener('change', render);
   });

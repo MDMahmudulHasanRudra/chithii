@@ -7,6 +7,7 @@
   var usdWhole = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
   var usdCents = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function money(c, n) {
+    if (window.ChithiiCurrency) return window.ChithiiCurrency.format(c, n);
     if (c === 'bdt') return '৳' + bdt.format(Math.round(n));
     var cents = Math.round(n * 100);
     return '$' + (cents % 100 === 0 ? usdWhole : usdCents).format(cents / 100);
@@ -52,5 +53,6 @@
       });
     });
     render();
+    document.addEventListener('chithii:currency', render);
   });
 })();

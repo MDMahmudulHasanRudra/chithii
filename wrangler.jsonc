@@ -15,6 +15,13 @@
     { "pattern": "www.chithii.com/*", "zone_name": "chithii.com" }
   ],
   "workers_dev": true,
+  // The admin portal saves src/data/pricing.json to this repository and branch. Secrets (set in the
+  // Cloudflare dashboard, never in this file): ADMIN_PASSWORD and GITHUB_TOKEN.
+  "vars": {
+    "GITHUB_REPO": "MDMahmudulHasanRudra/chithii",
+    "GITHUB_BRANCH": "main",
+    "PRICING_PATH": "src/data/pricing.json"
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

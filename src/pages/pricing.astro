@@ -13,6 +13,7 @@ import {
   pricingFaqs,
   trialDays,
   yearlyDiscount,
+  discount,
   custom,
   rates,
   valueComparison,
@@ -27,15 +28,15 @@ const seatsOf = (label: string) => Number.parseInt(label, 10) || 1;
 // inline script. Inputs, in this order, are direct children of the .group/p wrapper: #bm #by, #cb #cu.
 // Taka monthly is the default and the fallback for a browser without :has.
 const show = {
-  'bdt-monthly': 'block group-has-[#by:checked]/p:hidden group-has-[#cu:checked]/p:hidden',
+  'bdt-monthly': 'block group-has-[#by:checked]/p:hidden group-has-[#cu:checked]/p:hidden group-has-[#cl:checked]/p:hidden',
   'bdt-yearly': 'hidden group-has-[#by:checked~#cb:checked]/p:block',
-  'usd-monthly': 'hidden group-has-[#bm:checked~#cu:checked]/p:block',
-  'usd-yearly': 'hidden group-has-[#by:checked~#cu:checked]/p:block',
+  'usd-monthly': 'hidden group-has-[#bm:checked~#cu:checked]/p:block group-has-[#bm:checked~#cl:checked]/p:block',
+  'usd-yearly': 'hidden group-has-[#by:checked~#cu:checked]/p:block group-has-[#by:checked~#cl:checked]/p:block',
 } as const;
 // Inline variants of the same rules, for prices inside a sentence or a table header.
 const showInline = {
-  bdt: 'inline group-has-[#cu:checked]/p:hidden',
-  usd: 'hidden group-has-[#cu:checked]/p:inline',
+  bdt: 'inline group-has-[#cu:checked]/p:hidden group-has-[#cl:checked]/p:hidden',
+  usd: 'hidden group-has-[#cu:checked]/p:inline group-has-[#cl:checked]/p:inline',
 } as const;
 const views: { key: keyof typeof show; c: Currency; yearly: boolean }[] = [
   { key: 'bdt-monthly', c: 'bdt', yearly: false },
@@ -51,6 +52,7 @@ const on = {
   by: 'group-has-[#by:checked]/p:bg-white group-has-[#by:checked]/p:text-ink group-has-[#by:checked]/p:shadow-[var(--shadow-card)] group-has-[#by:focus-visible]/p:outline-2 group-has-[#by:focus-visible]/p:outline-accent',
   cb: 'group-has-[#cb:checked]/p:bg-white group-has-[#cb:checked]/p:text-ink group-has-[#cb:checked]/p:shadow-[var(--shadow-card)] group-has-[#cb:focus-visible]/p:outline-2 group-has-[#cb:focus-visible]/p:outline-accent',
   cu: 'group-has-[#cu:checked]/p:bg-white group-has-[#cu:checked]/p:text-ink group-has-[#cu:checked]/p:shadow-[var(--shadow-card)] group-has-[#cu:focus-visible]/p:outline-2 group-has-[#cu:focus-visible]/p:outline-accent',
+  cl: 'group-has-[#cl:checked]/p:bg-white group-has-[#cl:checked]/p:text-ink group-has-[#cl:checked]/p:shadow-[var(--shadow-card)] group-has-[#cl:focus-visible]/p:outline-2 group-has-[#cl:focus-visible]/p:outline-accent',
 } as const;
 
 // What the Custom card's script needs to suggest a cheaper standard plan: each plan's price, seats
@@ -93,6 +95,7 @@ const faqSchema = {
     <input type="radio" name="billing" id="by" class="sr-only" />
     <input type="radio" name="currency" id="cb" class="sr-only" checked />
     <input type="radio" name="currency" id="cu" class="sr-only" />
+    <input type="radio" name="currency" id="cl" class="sr-only" />
 
     <!-- Plans -->
     <section class="relative overflow-hidden bg-mist">
@@ -113,8 +116,13 @@ const faqSchema = {
             <div role="group" aria-label="Currency" class="inline-flex rounded-full border border-line bg-sunken p-1">
               <label for="cb" class={`${seg} ${on.cb}`}>৳ Taka</label>
               <label for="cu" class={`${seg} ${on.cu}`}>$ US dollar</label>
+              <!-- The visitor's own currency, shown by pricing-currency.js outside Bangladesh and the US. -->
+              <label for="cl" class={`${seg} ${on.cl} hidden [.has-local_&]:inline-block`} data-local-label>Local</label>
             </div>
           </div>
+          <p class="mt-3 hidden text-xs text-muted group-has-[#cl:checked]/p:block" data-local-note>
+            Converted from US dollar prices at today’s rate. You are billed in US dollars.
+          </p>
         </div>
 
         <ul class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 2xl:items-start">
@@ -143,7 +151,7 @@ const faqSchema = {
                       <div>
                         <p class="flex items-baseline gap-1.5">
                           <span class={`${showInline.bdt} text-4xl font-semibold tracking-tight`}>{money('bdt', 0)}</span>
-                          <span class={`${showInline.usd} text-4xl font-semibold tracking-tight`}>{money('usd', 0)}</span>
+                          <span class={`${showInline.usd} text-4xl font-semibold tracking-tight`} data-usd={0}>{money('usd', 0)}</span>
                           <span class="text-sm text-muted">/ month</span>
                         </p>
                         <p class="mt-1.5 text-sm text-muted">Free, with no time limit</p>
@@ -196,8 +204,8 @@ const faqSchema = {
                       ))}
                       <p class="text-xs text-muted">
                         {included} seats and {includedProjects} {includedProjects === 1 ? 'project' : 'projects'} included. Extra seat{' '}
-                        <span class={showInline.bdt}>{money('bdt', rates.extraSeat.bdt)}</span><span class={showInline.usd}>{money('usd', rates.extraSeat.usd)}</span>, extra project{' '}
-                        <span class={showInline.bdt}>{money('bdt', rates.extraProject.bdt)}</span><span class={showInline.usd}>{money('usd', rates.extraProject.usd)}</span> a month.
+                        <span class={showInline.bdt}>{money('bdt', rates.extraSeat.bdt)}</span><span class={showInline.usd} data-usd={rates.extraSeat.usd}>{money('usd', rates.extraSeat.usd)}</span>, extra project{' '}
+                        <span class={showInline.bdt}>{money('bdt', rates.extraProject.bdt)}</span><span class={showInline.usd} data-usd={rates.extraProject.usd}>{money('usd', rates.extraProject.usd)}</span> a month.
                       </p>
                     </div>
                   ) : (
@@ -237,7 +245,7 @@ const faqSchema = {
             data-included-seats={custom.seats}
             data-plans={planFacts}
             data-mail={site.email.contact}
-            data-discount="0.15"
+            data-discount={discount}
             class="relative flex flex-col rounded-2xl border border-dashed border-accent-line bg-white p-6 shadow-[var(--shadow-card)] md:col-span-2 xl:col-span-4 2xl:col-span-1"
           >
             <span class="bg-brand-gradient absolute -top-3 right-6 rounded-full px-3 py-1 text-xs font-semibold text-white">Build your own</span>
@@ -252,14 +260,14 @@ const faqSchema = {
                       <div class={show[v.key]}>
                         <p class="flex items-baseline gap-1.5">
                           <span class="text-4xl font-semibold tracking-tight" data-custom-amount={v.key}>
-                            {money(v.c, v.yearly ? custom.base[v.c] * (1 - 0.15) : custom.base[v.c])}
+                            {money(v.c, v.yearly ? custom.base[v.c] * (1 - discount) : custom.base[v.c])}
                           </span>
                           <span class="text-sm text-muted">/ month</span>
                         </p>
                         <p class="mt-1.5 text-sm text-muted">
                           {v.yearly ? (
                             <>
-                              <span data-custom-yearly={v.key}>{money(v.c, custom.base[v.c] * 12 * (1 - 0.15))}</span> billed yearly
+                              <span data-custom-yearly={v.key}>{money(v.c, custom.base[v.c] * 12 * (1 - discount))}</span> billed yearly
                             </>
                           ) : (
                             'Billed monthly'
@@ -287,8 +295,8 @@ const faqSchema = {
                     ))
                   }
                   <p class="text-xs text-muted">
-                    {custom.seats} seats included. Extra seat <span class={showInline.bdt}>{money('bdt', custom.extraSeat.bdt)}</span><span class={showInline.usd}>{money('usd', custom.extraSeat.usd)}</span>,
-                    extra project <span class={showInline.bdt}>{money('bdt', custom.extraProject.bdt)}</span><span class={showInline.usd}>{money('usd', custom.extraProject.usd)}</span> a month.
+                    {custom.seats} seats included. Extra seat <span class={showInline.bdt}>{money('bdt', custom.extraSeat.bdt)}</span><span class={showInline.usd} data-usd={custom.extraSeat.usd}>{money('usd', custom.extraSeat.usd)}</span>,
+                    extra project <span class={showInline.bdt}>{money('bdt', custom.extraProject.bdt)}</span><span class={showInline.usd} data-usd={custom.extraProject.usd}>{money('usd', custom.extraProject.usd)}</span> a month.
                   </p>
                 </div>
 
@@ -340,7 +348,7 @@ const faqSchema = {
                               />
                               <span class="min-w-0 flex-1">{o.label}</span>
                               <span class="shrink-0 text-xs font-semibold whitespace-nowrap text-muted">
-                                +<span class={showInline.bdt}>{money('bdt', o.price.bdt)}</span><span class={showInline.usd}>{money('usd', o.price.usd)}</span>
+                                +<span class={showInline.bdt}>{money('bdt', o.price.bdt)}</span><span class={showInline.usd} data-usd={o.price.usd}>{money('usd', o.price.usd)}</span>
                                 {o.perSeat && '/seat'}
                               </span>
                             </label>
@@ -357,9 +365,9 @@ const faqSchema = {
         </ul>
 
         <p class="mt-8 text-center text-sm text-muted">
-          On every paid plan: extra seat <span class={showInline.bdt}>{money('bdt', rates.extraSeat.bdt)}</span><span class={showInline.usd}>{money('usd', rates.extraSeat.usd)}</span>,
-          extra project <span class={showInline.bdt}>{money('bdt', rates.extraProject.bdt)}</span><span class={showInline.usd}>{money('usd', rates.extraProject.usd)}</span>,
-          extra 5 GB storage <span class={showInline.bdt}>{money('bdt', rates.extraStorage.bdt)}</span><span class={showInline.usd}>{money('usd', rates.extraStorage.usd)}</span> a month.
+          On every paid plan: extra seat <span class={showInline.bdt}>{money('bdt', rates.extraSeat.bdt)}</span><span class={showInline.usd} data-usd={rates.extraSeat.usd}>{money('usd', rates.extraSeat.usd)}</span>,
+          extra project <span class={showInline.bdt}>{money('bdt', rates.extraProject.bdt)}</span><span class={showInline.usd} data-usd={rates.extraProject.usd}>{money('usd', rates.extraProject.usd)}</span>,
+          extra 5 GB storage <span class={showInline.bdt}>{money('bdt', rates.extraStorage.bdt)}</span><span class={showInline.usd} data-usd={rates.extraStorage.usd}>{money('usd', rates.extraStorage.usd)}</span> a month.
           <a href="#compare" class="ml-1 font-semibold">See all features</a>
         </p>
       </div>
@@ -396,7 +404,7 @@ const faqSchema = {
                     </th>
                     <td class:list={['px-4 py-3 text-right align-top whitespace-nowrap', row.ours ? 'text-lg font-semibold text-accent-ink' : 'text-ink']}>
                       <span class={showInline.bdt}>{money('bdt', row.bdt ?? row.usd * valueComparison.rate)}</span>
-                      <span class={showInline.usd}>{money('usd', row.usd)}</span>
+                      <span class={showInline.usd} data-usd={row.usd}>{money('usd', row.usd)}</span>
                     </td>
                     <td class="hidden px-4 py-3 align-top text-sm text-muted sm:table-cell">{row.note}</td>
                   </tr>
@@ -452,7 +460,7 @@ const faqSchema = {
                         <>
                           {a.note && <span>{a.note} </span>}
                           <span class={`${showInline.bdt} text-base font-semibold text-ink`}>{money('bdt', a.price.bdt)}</span>
-                          <span class={`${showInline.usd} text-base font-semibold text-ink`}>{money('usd', a.price.usd)}</span> {a.per}
+                          <span class={`${showInline.usd} text-base font-semibold text-ink`} data-usd={a.price.usd}>{money('usd', a.price.usd)}</span> {a.per}
                         </>
                       ) : (
                         <span class="font-semibold text-accent-ink">{a.note}</span>
@@ -490,7 +498,7 @@ const faqSchema = {
                       ) : (
                         <>
                           from <span class={showInline.bdt}>{money('bdt', p.price!.bdt.monthly)}</span>
-                          <span class={showInline.usd}>{money('usd', p.price!.usd.monthly)}</span>/mo
+                          <span class={showInline.usd} data-usd={p.price!.usd.monthly}>{money('usd', p.price!.usd.monthly)}</span>/mo
                         </>
                       )}
                     </p>
@@ -575,6 +583,7 @@ const faqSchema = {
     </div>
   </section>
 
+  <script is:inline src="/js/pricing-currency.js" defer></script>
   <script is:inline src="/js/pricing-seats.js" defer></script>
   <script is:inline src="/js/pricing-custom.js" defer></script>
 </Base>
