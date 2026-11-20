@@ -107,29 +107,55 @@ await writeFile('public/apple-touch-icon.png', await icon(180, { radius: 0, pad:
 await writeFile('public/icon-192.png', await icon(192));
 await writeFile('public/icon-512.png', await icon(512));
 
-// favicon.svg: the 64px C embedded as a PNG (the ribbon's gradients are a raster). No tile, so it
-// reads on light and dark browser tabs alike.
-const fav64 = await sharp(markPng).resize(64, 64).png().toBuffer();
-await writeFile(
-  'public/favicon.svg',
-  `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64"><image width="64" height="64" href="data:image/png;base64,${fav64.toString('base64')}"/></svg>\n`,
-);
+// Favicons: plain PNGs of the C (no tile, so it reads on light and dark tabs), which every browser
+// shows. (An SVG favicon wrapping a PNG was tried and can show blank in some browsers.)
+const favPng = (size) => sharp(markPng).resize(size, size).png({ compressionLevel: 9 }).toBuffer();
+await writeFile('public/favicon-16x16.png', await favPng(16));
+await writeFile('public/favicon-32x32.png', await favPng(32));
+await writeFile('public/favicon-48x48.png', await favPng(48));
 
-// favicon.ico containing one 48×48 PNG
-const ico48 = await sharp(markPng).resize(48, 48).png().toBuffer();
-const header = Buffer.alloc(22);
-header.writeUInt16LE(0, 0); // reserved
-header.writeUInt16LE(1, 2); // type: icon
-header.writeUInt16LE(1, 4); // count
-header.writeUInt8(48, 6); // width
-header.writeUInt8(48, 7); // height
-header.writeUInt8(0, 8); // palette
-header.writeUInt8(0, 9); // reserved
-header.writeUInt16LE(1, 10); // planes
-header.writeUInt16LE(32, 12); // bpp
-header.writeUInt32LE(ico48.length, 14); // size
-header.writeUInt32LE(22, 18); // offset
-await writeFile('public/favicon.ico', Buffer.concat([header, ico48]));
+// favicon.ico with 16, 32 and 48 px PNG images (what /favicon.ico requests and Windows use).
+const icoSizes = [16, 32, 48];
+const icoImages = await Promise.all(icoSizes.map(favPng));
+const icoHeader = Buffer.alloc(6 + 16 * icoSizes.length);
+icoHeader.writeUInt16LE(0, 0); // reserved
+icoHeader.writeUInt16LE(1, 2); // type: icon
+icoHeader.writeUInt16LE(icoSizes.length, 4); // count
+let icoOffset = icoHeader.length;
+icoSizes.forEach((size, i) => {
+  const e = 6 + 16 * i;
+  icoHeader.writeUInt8(size, e); // width
+  icoHeader.writeUInt8(size, e + 1); // height
+  icoHeader.writeUInt8(0, e + 2); // palette
+  icoHeader.writeUInt8(0, e + 3); // reserved
+  icoHeader.writeUInt16LE(1, e + 4); // planes
+  icoHeader.writeUInt16LE(32, e + 6); // bpp
+  icoHeader.writeUInt32LE(icoImages[i].length, e + 8); // size
+  icoHeader.writeUInt32LE(icoOffset, e + 12); // offset
+  icoOffset += icoImages[i].length;
+});
+await writeFile('public/favicon.ico', Buffer.concat([icoHeader, ...icoImages]));
+
+// Web app manifest: name, colours and the home-screen icons.
+await writeFile(
+  'public/site.webmanifest',
+  JSON.stringify(
+    {
+      name: 'Chithii',
+      short_name: 'Chithii',
+      icons: [
+        { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      ],
+      theme_color: '#060b4f',
+      background_color: '#ffffff',
+      display: 'browser',
+      start_url: '/',
+    },
+    null,
+    2,
+  ) + '\n',
+);
 
 // ---- 2. Open Graph image 1200×630: the logo on white, the promise in navy, the swoosh colours --------
 const ogLogo = await sharp(rgba, { raw: { width: W, height: H, channels: 4 } }).extract(full).resize({ width: 560 }).png().toBuffer();
