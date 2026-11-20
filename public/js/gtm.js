@@ -1,9 +1,9 @@
-// Google Tag Manager for chithii.com (container GTM-PK2HSTC4).
-// A file on this site rather than an inline snippet, because the CSP (public/_headers) allows no inline
-// script. It does what Google's snippet does: set up dataLayer and gtag(), then load gtm.js.
+// Google Tag Manager for chithii.com (container GTM-PK2HSTC4): the inline part of Google's snippet.
+// A file on this site rather than inline, because the CSP (public/_headers) allows no inline script.
+// It sets up dataLayer, gtag() and the consent defaults. The container itself is the
+// <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-PK2HSTC4"> tag right after it in
+// src/layouts/Base.astro; this file runs first because it is not async.
 (function () {
-  var GTM_ID = 'GTM-PK2HSTC4';
-
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     window.dataLayer.push(arguments);
@@ -33,9 +33,4 @@
 
   gtag('js', new Date());
   window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtm.js?id=' + GTM_ID;
-  document.head.appendChild(s);
 })();
