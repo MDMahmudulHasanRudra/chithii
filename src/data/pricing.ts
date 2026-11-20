@@ -160,7 +160,7 @@ export const comparison: RowGroup[] = [
       { label: 'Team seats included', cells: ['1', '5', '8', '15'] },
       { label: 'Extra seats (৳200 each)', cells: [false, true, true, true] },
       { label: 'Projects (brands or clients)', cells: ['1', '1 + add-on', '3 + add-on', '10 + add-on'] },
-      { label: 'WhatsApp numbers', cells: [false, '1 + add-on', '3 + add-on', '10 + add-on'] },
+      { label: 'WhatsApp numbers', cells: [false, '1', '3', '10'] },
       { label: 'Storage for files and media', cells: ['1 GB', '5 GB', '20 GB', '50 GB'] },
       { label: 'Conversations and contacts', cells: ['Unlimited', 'Unlimited', 'Unlimited', 'Unlimited'] },
       { label: 'AI replies', cells: ['Unlimited', 'Unlimited', 'Unlimited', 'Unlimited'] },
@@ -275,13 +275,6 @@ export const addons: Addon[] = [
     price: rates.extraStorage,
     per: '/ 5 GB / mo',
     body: 'More room for the photos, voice notes and documents your customers send.',
-  },
-  {
-    name: 'WhatsApp number',
-    icon: 'whatsapp',
-    price: { bdt: 300, usd: 2.49 },
-    per: '/ number / mo',
-    body: 'Connect another WhatsApp Business number through the Official API, on any paid plan.',
   },
   {
     name: 'Social Studio',
@@ -454,7 +447,7 @@ export const pricingFaqs = [
   },
   {
     q: 'What add-ons are there?',
-    a: 'Extra seats, projects, storage and WhatsApp numbers, and modules from a higher plan, such as Social Studio, routing and SLA, AI Copilot, CRM and couriers, and the API. Add-ons are billed with your plan and can be removed at renewal.',
+    a: 'Extra seats, projects and storage, and modules from a higher plan, such as Social Studio, routing and SLA, AI Copilot, CRM and couriers, and the API. Add-ons are billed with your plan and can be removed at renewal.',
   },
   {
     q: 'How does the Custom plan work?',
